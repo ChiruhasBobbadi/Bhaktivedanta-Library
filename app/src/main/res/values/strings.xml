@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Book</string>
+    <string name="title_books">Books</string>
+    <string name="title_bookmarks">Bookmarks</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_search">Search</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
