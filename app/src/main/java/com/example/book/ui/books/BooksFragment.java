@@ -35,7 +35,7 @@ public class BooksFragment extends Fragment {
     List<String> books;
     GridAdapter adapter;
 
-    private Map<String,String> map = new HashMap<>();
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class BooksFragment extends Fragment {
             @Override
             public void onChanged(List<LookupTable> lookupTables) {
 
-                Log.d(TAG, "onChanged: "+lookupTables.size());
+                adapter.setData(lookupTables);
             }
         });
 
@@ -81,28 +81,7 @@ public class BooksFragment extends Fragment {
         books.add("Teachings of Lord Caitanya");
         books.add("Elevation to Kṛṣṇa Consciousness");
 
-        map.put("KṚṢṆA, The Supreme Personality of Godhead","a");
-        map.put("The Nectar of Instruction","b");
-        map.put("Śrī Īśopaniṣad","c");
-        map.put("Kṛṣṇa Consciousness, The Topmost Yoga System","d");
-        map.put("Rāja-Vidyā: The King of Knowledge","e");
-        map.put("The Nectar of Devotion","f");
-        map.put("Teachings of Lord Caitanya","g");
-        map.put("Elevation to Kṛṣṇa Consciousness","h");
-        map.put("Kṛṣṇa Consciousness, The Matchless Gift","i");
-        map.put("Transcendental Teachings of Prahlāda Mahārāja","j");
-        map.put("Teachings of Lord Kapila, the Son of Devahuti","k");
-        map.put("Teachings of Queen Kuntī","l");
-        map.put("The Path of Perfection","m");
-        map.put("The Perfection of Yoga","n");
-        map.put("Beyond Birth & Death","o");
-        map.put("On the Way to Kṛṣṇa","p");
-        map.put("Easy Journey to Other Planets","q");
-        map.put("Perfect Questions, Perfect Answers","r");
-        map.put("Kṛṣṇa, the Reservoir of Pleasure","s");
-        map.put("Bhagavad-gītā As It Is","t");
-        map.put("Life Comes from Life","u");
-        map.put("The Science of Self Realization","v");
+
 
     }
 }
