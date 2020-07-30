@@ -9,7 +9,11 @@
         android:id="@+id/navigation_books"
         android:name="com.example.book.ui.books.BooksFragment"
         android:label="@string/title_books"
-        tools:layout="@layout/fragment_books" />
+        tools:layout="@layout/fragment_books" >
+        <action
+            android:id="@+id/action_navigation_books_to_l1Fragment"
+            app:destination="@id/l1Fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_bookmarks"
@@ -27,4 +31,16 @@
         android:name="com.example.book.ui.search.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/l1Fragment"
+        android:name="com.example.book.ui.l1Books.L1Fragment"
+        tools:layout="@layout/fragment_l1"
+        android:label="{title}">
+        <action
+            android:id="@+id/action_l1Fragment_to_navigation_books"
+            app:destination="@id/navigation_books" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
 </navigation>

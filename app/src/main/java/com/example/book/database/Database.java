@@ -5,12 +5,15 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.book.dao.level1.books.Level1_Books;
 import com.example.book.dao.level1.books.Level1_BooksDao;
+import com.example.book.dao.level1.pages.Level1_Pages;
+import com.example.book.dao.level1.pages.Level1_PagesDao;
 import com.example.book.dao.lookup.LookUpDao;
 import com.example.book.dao.lookup.LookupTable;
 
 
-@androidx.room.Database(entities = {LookupTable.class}, version = 1)
+@androidx.room.Database(entities = {LookupTable.class, Level1_Books.class, Level1_Pages.class}, version = 1)
 abstract class Database extends RoomDatabase {
 
     private static Database instance;
@@ -30,7 +33,7 @@ abstract class Database extends RoomDatabase {
 
     public abstract Level1_BooksDao level1_booksDao();
 
-//    public abstract Level1_PagesDao level1_pagesDao();
+    public abstract Level1_PagesDao level1_pagesDao();
 //
 //    public abstract Level2_BooksDao level2_booksDao();
 //

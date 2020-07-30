@@ -61,10 +61,10 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
     private void checkPrefs() {
         sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
                 MODE_PRIVATE);
-        _text = sharedpreferences.getBoolean("text", false);
-        _synonyms = sharedpreferences.getBoolean("synonyms", false);
-        _translation = sharedpreferences.getBoolean("translation", false);
-        _purport = sharedpreferences.getBoolean("purport", false);
+        _text = sharedpreferences.getBoolean("text", true);
+        _synonyms = sharedpreferences.getBoolean("synonyms", true);
+        _translation = sharedpreferences.getBoolean("translation", true);
+        _purport = sharedpreferences.getBoolean("purport", true);
 
 
     }

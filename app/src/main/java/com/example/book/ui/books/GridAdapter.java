@@ -25,13 +25,18 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
 
     private ItemListener myListener;
-    List<String> names;
     List<Integer> images;
     List<LookupTable> lookupTables ;
      Map<String,Integer> map;
 
-    public GridAdapter(List<String> names) {
-        this.names = names;
+    public GridAdapter(ItemListener listener) {
+
+        myListener = listener;
+
+        initialise();
+    }
+
+    private void initialise() {
         lookupTables = new ArrayList<>();
         map = new HashMap<>();
         map.put("KṚṢṆA, The Supreme Personality of Godhead",R.drawable.a);
@@ -60,11 +65,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         map.put("Śrī Caitanya-caritāmṛta",R.drawable.x);
     }
 
-    public GridAdapter(ItemListener listener) {
-
-        myListener = listener;
-
-    }
 
     public void setListener(ItemListener listener) {
         myListener = listener;
@@ -87,12 +87,15 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
        // String name = names.get(position);
 
-        LookupTable look = lookupTables.get(position);
+      final  LookupTable look = lookupTables.get(position);
 
         holder.bookName.setText(look.getBookName());
 
 
         holder.bookImage.setImageResource(map.get(look.getBookName()));
+
+        holder.card.setOnClickListener(view->myListener.onItemClick(look,view));
+
 
 
     }
@@ -105,19 +108,21 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     }
 
     public interface ItemListener {
-        void onItemClick();
+        void onItemClick(LookupTable clicked,View view);
 
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView bookName;
         ImageView bookImage;
+        CardView card;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             bookName = itemView.findViewById(R.id.bookName);
             bookImage = itemView.findViewById(R.id.bookImage);
+            card = itemView.findViewById(R.id.card);
         }
     }
 

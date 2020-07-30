@@ -1,5 +1,6 @@
 package com.example.book.ui.books;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,25 +30,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BooksFragment extends Fragment {
+import static android.content.Context.MODE_PRIVATE;
+
+public class BooksFragment extends Fragment implements GridAdapter.ItemListener {
     private static final String TAG = "BooksFragment";
 
     private BooksViewModel booksViewModel;
     RecyclerView rv;
-    List<String> books;
+    SharedPreferences sharedpreferences;
     GridAdapter adapter;
-
+    SharedPreferences.Editor editor;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        init();
         View root = inflater.inflate(R.layout.fragment_books, container, false);
 
         rv = root.findViewById(R.id.rv);
 
-        adapter= new GridAdapter(books);
+        adapter= new GridAdapter(this::onItemClick);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2,GridLayoutManager.VERTICAL,false);
 
         rv.setLayoutManager(gridLayoutManager);
@@ -54,13 +58,7 @@ public class BooksFragment extends Fragment {
                 ViewModelProviders.of(getActivity()).get(BooksViewModel.class);
 
 
-        booksViewModel.getAll().observe(getViewLifecycleOwner(), new Observer<List<LookupTable>>() {
-            @Override
-            public void onChanged(List<LookupTable> lookupTables) {
-
-                adapter.setData(lookupTables);
-            }
-        });
+        booksViewModel.getAll().observe(getViewLifecycleOwner(), lookupTables -> adapter.setData(lookupTables));
 
 
 
@@ -69,19 +67,25 @@ public class BooksFragment extends Fragment {
         return root;
     }
 
-    private void init() {
-        books = new ArrayList<>();
-        books.add("KṚṢṆA, The Supreme Personality of Godhead");
-        books.add("The Nectar of Instruction");
-        books.add("Śrī Īśopaniṣad");
-        books.add("Kṛṣṇa Consciousness, The Topmost Yoga System");
+    @Override
+    public void onItemClick(LookupTable clicked,View v) {
 
-        books.add("Rāja-Vidyā: The King of Knowledge");
-        books.add("The Nectar of Devotion");
-        books.add("Teachings of Lord Caitanya");
-        books.add("Elevation to Kṛṣṇa Consciousness");
+        NavController controller = Navigation.findNavController(v);
 
+        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
+                MODE_PRIVATE);
+        editor = sharedpreferences.edit();
+        editor.putString("bookName", clicked.getBookName());
+        editor.apply();
+        Bundle bundle = new Bundle();
+        bundle.putString("title", clicked.getBookName());
 
+        if(clicked.getLevel()==1)
+            controller.navigate(R.id.action_navigation_books_to_l1Fragment,bundle);
+        else if (clicked.getLevel()==2)
+            Toast.makeText(getActivity(), "Level2", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getActivity(), "Level3", Toast.LENGTH_SHORT).show();
 
     }
 }

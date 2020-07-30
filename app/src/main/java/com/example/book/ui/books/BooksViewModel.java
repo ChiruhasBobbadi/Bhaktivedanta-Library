@@ -10,18 +10,19 @@ import androidx.lifecycle.ViewModel;
 import com.example.book.dao.lookup.LookUpDao;
 import com.example.book.dao.lookup.LookupTable;
 import com.example.book.database.L1BookRepo;
+import com.example.book.database.LookUpRepo;
 
 import java.util.List;
 
 public class BooksViewModel extends AndroidViewModel {
 
-    L1BookRepo repo;
+    LookUpRepo repo;
 
     LiveData<List<LookupTable>> all;
 
     public BooksViewModel(Application application) {
         super(application);
-        repo = new L1BookRepo(application);
+        repo = new LookUpRepo(application);
         all = repo.getAllLevels();
     }
 
