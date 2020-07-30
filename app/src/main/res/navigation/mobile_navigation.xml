@@ -33,7 +33,7 @@
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/l1Fragment"
-        android:name="com.example.book.ui.l1Books.L1Fragment"
+        android:name="com.example.book.ui.Level1.Books.L1Fragment"
         tools:layout="@layout/fragment_l1"
         android:label="{title}">
         <action
@@ -42,5 +42,22 @@
         <argument
             android:name="title"
             app:argType="string" />
+        <action
+            android:id="@+id/l1Book_to_books"
+            app:destination="@id/navigation_books"
+            app:popUpTo="@id/navigation_books"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_l1Fragment_to_l1ChaptersFragment"
+            app:destination="@id/l1ChaptersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/l1ChaptersFragment"
+        android:name="com.example.book.ui.Level1.chapters.L1ChaptersFragment"
+        android:label="Chapters"
+        tools:layout="@layout/fragment_l1_chapters">
+        <action
+            android:id="@+id/action_l1ChaptersFragment_to_l1Fragment"
+            app:destination="@id/l1Fragment" />
     </fragment>
 </navigation>

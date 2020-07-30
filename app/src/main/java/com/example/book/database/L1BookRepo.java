@@ -36,7 +36,7 @@ public class L1BookRepo implements Level1_BooksDao, Level1_PagesDao {
     public void updateCurrentPage(String book, int page) {
 
         Runnable runnable = () -> {
-            db.level1_booksDao().updateCurrentPage(book,page); //Replace this by your request
+            db.level1_booksDao().updateCurrentPage(book,page);
         };
         ExecutorService ex  = Executors.newSingleThreadExecutor();
         ex.submit(runnable);
@@ -53,10 +53,15 @@ public class L1BookRepo implements Level1_BooksDao, Level1_PagesDao {
         return l1PDao.getPages(book);
     }
 
+//    @Override
+//    public void setBookmark(String book, int val) {
+//
+//    }
 
-    // define all the possible operations here
 
-    // these operations will be visible to view
+    public LiveData<List<String >> getChapters(String book){
+        return l1PDao.getChapters(book);
+    }
 
 
 }

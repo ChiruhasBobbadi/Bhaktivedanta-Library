@@ -1,4 +1,4 @@
-package com.example.book.ui.l1Books;
+package com.example.book.ui.Level1.Books;
 
 import android.app.Application;
 import android.util.Log;
@@ -15,33 +15,40 @@ import com.example.book.database.L1BookRepo;
 
 import java.util.List;
 
-public class L1ViewModel extends AndroidViewModel implements Level1_BooksDao, Level1_PagesDao {
+public class L1ViewModel extends AndroidViewModel  {
     private static final String TAG = "L1ViewModel";
     L1BookRepo repo;
+
     public L1ViewModel(@NonNull Application application) {
         super(application);
         repo = new L1BookRepo(application);
     }
 
-    @Override
+
     public LiveData<Integer> getCurrentPage(String book) {
         return repo.getCurrentPage(book);
     }
 
-    @Override
+
     public void updateCurrentPage(String book, int page) {
-        repo.updateCurrentPage(book,page);
+        Log.d(TAG, "updateCurrentPage: "+page);
+        repo.updateCurrentPage(book, page);
     }
 
-    @Override
+
     public LiveData<Level1_Books> getBook(String book) {
         return repo.getBook(book);
     }
 
-    @Override
+
     public LiveData<List<Level1_Pages>> getPages(String book) {
-        LiveData<List<Level1_Pages>> a= repo.getPages(book);
-        //Log.d(TAG, "getPages: "+a.getValue().size());
-        return a;
+
+        return repo.getPages(book);
+
     }
+
+//    @Override
+//    public void setBookmark(String book, int val) {
+//
+//    }
 }
