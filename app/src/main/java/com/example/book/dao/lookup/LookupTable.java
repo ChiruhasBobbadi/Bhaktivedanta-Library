@@ -1,15 +1,19 @@
 package com.example.book.dao.lookup;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "lookup_table")
+@Entity(tableName = "lookup")
 public class LookupTable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String bookName;
+    @NonNull
     private int level;
+    @NonNull
+    private String bookName;
+
 
     public int getId() {
         return id;
@@ -19,23 +23,24 @@ public class LookupTable {
         this.id = id;
     }
 
-    public LookupTable(int id, String bookName, int level) {
-        this.id = id;
-        this.bookName = bookName;
-        this.level = level;
-    }
-
-    public LookupTable() {
-    }
-
     public String getBookName() {
         return bookName;
+    }
+
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
     }
 
     public int getLevel() {
         return level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
 
-
+    public LookupTable(int level, String bookName) {
+        this.level = level;
+        this.bookName = bookName;
+    }
 }

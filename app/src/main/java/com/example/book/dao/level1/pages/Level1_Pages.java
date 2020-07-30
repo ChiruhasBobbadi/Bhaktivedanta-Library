@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "level1_pages")
 public class Level1_Pages {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int id;
     private int chapter;
     private int pageNumber;
@@ -16,8 +16,76 @@ public class Level1_Pages {
     private String text;
     private String translation;
 
-    public Level1_Pages(int id) {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public int getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(int chapter) {
+        this.chapter = chapter;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
+    }
+
+    public String getChapterName() {
+        return chapterName;
+    }
+
+    public void setChapterName(String chapterName) {
+        this.chapterName = chapterName;
+    }
+
+    public String getPurport() {
+        return purport;
+    }
+
+    public void setPurport(String purport) {
+        this.purport = purport;
+    }
+
+    public String getSynonyms() {
+        return synonyms;
+    }
+
+    public void setSynonyms(String synonyms) {
+        this.synonyms = synonyms;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getTranslation() {
+        return translation;
+    }
+
+    public void setTranslation(String translation) {
+        this.translation = translation;
     }
 
     public Level1_Pages(int id, int chapter, int pageNumber, String bookName, String chapterName, String purport, String synonyms, String text, String translation) {
@@ -30,41 +98,5 @@ public class Level1_Pages {
         this.synonyms = synonyms;
         this.text = text;
         this.translation = translation;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public int getChapter() {
-        return chapter;
-    }
-
-    public int getPageNumber() {
-        return pageNumber;
-    }
-
-    public String getBookName() {
-        return bookName;
-    }
-
-    public String getChapterName() {
-        return chapterName;
-    }
-
-    public String getPurport() {
-        return purport;
-    }
-
-    public String getSynonyms() {
-        return synonyms;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getTranslation() {
-        return translation;
     }
 }
