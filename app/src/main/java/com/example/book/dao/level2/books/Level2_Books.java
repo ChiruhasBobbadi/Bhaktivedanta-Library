@@ -1,5 +1,6 @@
 package com.example.book.dao.level2.books;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -14,6 +15,7 @@ public class Level2_Books {
     private String foreword;
     private String introduction;
     private String preface;
+    @NonNull
     private String bookName;
 
     public int getId() {

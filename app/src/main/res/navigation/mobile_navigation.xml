@@ -19,6 +19,12 @@
                 android:name="pageNumber"
                 android:defaultValue="0" />
         </action>
+        <action
+            android:id="@+id/action_navigation_books_to_l2Fragment"
+            app:destination="@id/l2Fragment" />
+        <action
+            android:id="@+id/action_navigation_books_to_l3Fragment"
+            app:destination="@id/l3Fragment" />
     </fragment>
 
     <fragment
@@ -68,5 +74,77 @@
             app:popUpTo="@id/navigation_books"
             app:popUpToInclusive="false"
             />
+    </fragment>
+    <fragment
+        android:id="@+id/l2Fragment"
+        android:name="com.example.book.ui.Level2.books.L2Fragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_l2" >
+        <action
+            android:id="@+id/action_l2Fragment_to_l2Chapters"
+            app:destination="@id/l2Chapters" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="pageNumber"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/l2Chapters"
+        android:name="com.example.book.ui.Level2.chapters.L2ChaptersFragment"
+        android:label="Chapter"
+        tools:layout="@layout/fragment_l2_chapters">
+        <action
+            android:id="@+id/action_l2Chapters_to_l2VerseFragment"
+            app:destination="@id/l2VerseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/l2VerseFragment"
+        android:name="com.example.book.ui.Level2.Verse.L2VerseFragment"
+        android:label="Verse"
+        tools:layout="@layout/fragment_l2_verse">
+        <action
+            android:id="@+id/action_l2VerseFragment_to_l2Fragment"
+            app:destination="@id/l2Fragment"
+            app:popUpTo="@id/navigation_books"
+            app:popUpToInclusive="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/l3Fragment"
+        android:name="com.example.book.ui.Level3.Books.L3Fragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_l3"
+        >
+        <action
+            android:id="@+id/action_l3Fragment_to_l3Canto"
+            app:destination="@id/l3Canto" />
+    </fragment>
+    <fragment
+        android:id="@+id/l3Canto"
+        android:name="com.example.book.L3Canto"
+        android:label="fragment_l3_canto"
+        tools:layout="@layout/fragment_l3_canto" >
+        <action
+            android:id="@+id/action_l3Canto_to_l3ChapterFragment"
+            app:destination="@id/l3ChapterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/l3ChapterFragment"
+        android:name="com.example.book.L3ChapterFragment"
+        android:label="Chapter"
+        tools:layout="@layout/fragment_l3_chapter">
+        <action
+            android:id="@+id/action_l3ChapterFragment_to_l3VerseFragment"
+            app:destination="@id/l3VerseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/l3VerseFragment"
+        android:name="com.example.book.L3VerseFragment"
+        android:label="Verse"
+        tools:layout="@layout/fragment_l3_verse">
+        <action
+            android:id="@+id/action_l3VerseFragment_to_l3Fragment"
+            app:destination="@id/l3Fragment" />
     </fragment>
 </navigation>

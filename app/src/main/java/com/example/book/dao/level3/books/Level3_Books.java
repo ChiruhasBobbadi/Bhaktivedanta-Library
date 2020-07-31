@@ -1,5 +1,6 @@
 package com.example.book.dao.level3.books;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -7,10 +8,15 @@ import androidx.room.PrimaryKey;
 public class Level3_Books {
     @PrimaryKey
     private int id;
+    @NonNull
     private int pagesCount;
+    @NonNull
     private int currentPage;
+    @NonNull
     private String introduction;
+    @NonNull
     private String preface;
+    @NonNull
     private String bookName;
 
     public int getId() {

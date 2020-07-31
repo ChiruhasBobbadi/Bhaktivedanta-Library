@@ -1,5 +1,6 @@
 package com.example.book.dao.level3.pages;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -7,16 +8,27 @@ import androidx.room.PrimaryKey;
 public class Level3_Pages {
     @PrimaryKey
     private int id;
+    @NonNull
     private int chapter;
+    @NonNull
     private int pageNumber;
+    @NonNull
     private String bookName;
-    private String verse;
+    @NonNull
+    private int verse;
+    @NonNull
     private String chapterName;
+    @NonNull
     private String purport;
+    @NonNull
     private String synonyms;
+    @NonNull
     private String text;
+    @NonNull
     private String translation;
+    @NonNull
     private int level_3;
+    @NonNull
     private String level_3_Name;
 
     public int getId() {
@@ -51,11 +63,11 @@ public class Level3_Pages {
         this.bookName = bookName;
     }
 
-    public String getVerse() {
+    public int getVerse() {
         return verse;
     }
 
-    public void setVerse(String verse) {
+    public void setVerse(int verse) {
         this.verse = verse;
     }
 
@@ -115,7 +127,7 @@ public class Level3_Pages {
         this.level_3_Name = level_3_Name;
     }
 
-    public Level3_Pages(int id, int chapter, int pageNumber, String bookName, String verse, String chapterName, String purport, String synonyms, String text, String translation, int level_3, String level_3_Name) {
+    public Level3_Pages(int id, int chapter, int pageNumber, String bookName, int verse, String chapterName, String purport, String synonyms, String text, String translation, int level_3, String level_3_Name) {
         this.id = id;
         this.chapter = chapter;
         this.pageNumber = pageNumber;

@@ -71,9 +71,9 @@ public class BooksFragment extends Fragment implements GridAdapter.ItemListener 
         if(clicked.getLevel()==1)
             controller.navigate(R.id.action_navigation_books_to_l1Fragment,bundle);
         else if (clicked.getLevel()==2)
-            Toast.makeText(getActivity(), "Level2", Toast.LENGTH_SHORT).show();
+            controller.navigate(R.id.action_navigation_books_to_l2Fragment,bundle);
         else
-            Toast.makeText(getActivity(), "Level3", Toast.LENGTH_SHORT).show();
+            controller.navigate(R.id.action_navigation_books_to_l3Fragment,bundle);
 
     }
 }
