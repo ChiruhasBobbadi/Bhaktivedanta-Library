@@ -8,20 +8,18 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.book.dao.level1.books.Level1_Books;
-import com.example.book.dao.level1.books.Level1_BooksDao;
 import com.example.book.dao.level1.pages.Level1_Pages;
-import com.example.book.dao.level1.pages.Level1_PagesDao;
-import com.example.book.database.L1BookRepo;
+import com.example.book.database.L1Repo;
 
 import java.util.List;
 
 public class L1ViewModel extends AndroidViewModel  {
     private static final String TAG = "L1ViewModel";
-    L1BookRepo repo;
+    L1Repo repo;
 
     public L1ViewModel(@NonNull Application application) {
         super(application);
-        repo = new L1BookRepo(application);
+        repo = new L1Repo(application);
     }
 
 

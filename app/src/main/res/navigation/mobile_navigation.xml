@@ -12,7 +12,13 @@
         tools:layout="@layout/fragment_books" >
         <action
             android:id="@+id/action_navigation_books_to_l1Fragment"
-            app:destination="@id/l1Fragment" />
+            app:destination="@id/l1Fragment" >
+            <argument
+                android:name="title" />
+            <argument
+                android:name="pageNumber"
+                android:defaultValue="0" />
+        </action>
     </fragment>
 
     <fragment
@@ -38,15 +44,15 @@
         android:label="{title}">
         <action
             android:id="@+id/action_l1Fragment_to_navigation_books"
-            app:destination="@id/navigation_books" />
+            app:destination="@id/navigation_books"
+            />
         <argument
             android:name="title"
             app:argType="string" />
         <action
             android:id="@+id/l1Book_to_books"
             app:destination="@id/navigation_books"
-            app:popUpTo="@id/navigation_books"
-            app:popUpToInclusive="true" />
+             />
         <action
             android:id="@+id/action_l1Fragment_to_l1ChaptersFragment"
             app:destination="@id/l1ChaptersFragment" />
@@ -58,6 +64,9 @@
         tools:layout="@layout/fragment_l1_chapters">
         <action
             android:id="@+id/action_l1ChaptersFragment_to_l1Fragment"
-            app:destination="@id/l1Fragment" />
+            app:destination="@id/l1Fragment"
+            app:popUpTo="@id/navigation_books"
+            app:popUpToInclusive="false"
+            />
     </fragment>
 </navigation>

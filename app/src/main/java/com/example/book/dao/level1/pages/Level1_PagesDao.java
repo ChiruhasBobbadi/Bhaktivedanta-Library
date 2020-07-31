@@ -14,6 +14,7 @@ public interface Level1_PagesDao {
     @Query("select chapterName from level1_pages where bookName=:book order by chapter")
     LiveData<List<String>> getChapters(String book);
 
-    //void setBookmark(String book, int val);
+    @Query("select pageNumber from level1_pages where bookName=:book and chapterName=:chapter")
+     LiveData<Integer> getPageNumberOfChapter(String book,String chapter);
 
 }

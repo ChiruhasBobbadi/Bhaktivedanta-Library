@@ -1,123 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
-
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="match_parent">
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
 
-            <TextView
-                android:id="@+id/chapter"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintBottom_toTopOf="@+id/text"
-                app:layout_constraintEnd_toStartOf="@+id/guideline6"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
-                app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/chapter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/text"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline3" />
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.15" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="45dp" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="45dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.85" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
 
-            <TextView
-                android:id="@+id/synonyms"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingTop="52dp"
-                android:paddingRight="4dp"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintEnd_toStartOf="@+id/guideline6"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
-                app:layout_constraintTop_toBottomOf="@+id/text" />
+    <TextView
+        android:id="@+id/synonyms"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingTop="52dp"
+        android:paddingRight="4dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/text" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.07" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.07" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.93" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.93" />
 
-            <TextView
-                android:id="@+id/translation"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
-                android:paddingLeft="2dp"
-                android:paddingTop="28dp"
-                android:paddingRight="2dp"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/synonyms" />
+    <TextView
+        android:id="@+id/translation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:paddingLeft="2dp"
+        android:paddingTop="28dp"
+        android:paddingRight="2dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/synonyms" />
 
-            <TextView
-                android:id="@+id/purport"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:paddingTop="52dp"
-                android:paddingEnd="4dp"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/black"
-                android:typeface="sans"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/translation" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

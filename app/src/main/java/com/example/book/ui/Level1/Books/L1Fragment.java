@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.SnapHelper;
 import com.example.book.R;
 import com.example.book.dao.level1.pages.Level1_Pages;
 
+import java.util.Arrays;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
@@ -39,6 +41,7 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
     private int scrollTo = -1;
     private Menu menu;
     boolean isBookmark;
+    boolean isFromChapter =false;
     View view;
 
     @Override
@@ -47,28 +50,24 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
         setHasOptionsMenu(true);
         View root = inflater.inflate(R.layout.fragment_l1, container, false);
         view = root;
+        checkIfFromChapter();
         getBookName();
 
-        /*RecyclerView.SmoothScroller smoothScroller = new
-                LinearSmoothScroller(getActivity()) {
-                    @Override protected int getVerticalSnapPreference() {
-                        return LinearSmoothScroller.SNAP_TO_START;
-                    }
-                };
-        smoothScroller.setTargetPosition(scrollTo);*/
-        rv = root.findViewById(R.id.rv);
 
-        rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        adapter = new L1Adapter(this);
 
-      /*  LinearSnapHelper linearSnapHelper = new SnapHelperOneByOne();
-        linearSnapHelper.attachToRecyclerView(rv);*/
 
-        SnapHelper snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(rv);
+        initRecyclerView();
 
+         viewModelCall();
+
+
+        return root;
+    }
+
+    private void viewModelCall() {
         viewModel = ViewModelProviders.of(this).get(L1ViewModel.class);
 
+        if(!isFromChapter)
         viewModel.getCurrentPage(bookName).observe(getViewLifecycleOwner(), integer -> {
 
             if (scrollTo == -1) {
@@ -77,15 +76,42 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
             }
 
         });
+        else{
+            rv.scrollToPosition(scrollTo - 1);
+        }
 
 
         viewModel.getPages(bookName).observe(getViewLifecycleOwner(), level1_pages -> {
             adapter.setData(level1_pages, _text, _purp, _trans, _syn);
             rv.setAdapter(adapter);
         });
+    }
+
+    private void initRecyclerView() {
+        rv = view.findViewById(R.id.rv);
+
+        rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        adapter = new L1Adapter(this,getActivity());
 
 
-        return root;
+        SnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(rv);
+    }
+
+    private void checkIfFromChapter() {
+
+        if(getArguments().containsKey("pageNumber") && getArguments().getString("pageNumber")!=null){
+            String t = getArguments().getString("pageNumber");
+
+            String a[] = t.split("-");
+
+            if(a.length==2){
+                isFromChapter = true;
+                scrollTo = Integer.parseInt(a[0]);
+            }
+        }
+
+
     }
 
     private void getBookName() {
@@ -104,7 +130,7 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
 
 
     @Override
-    public void onItemClick(int currentPage) {
+    public void onPageChange(int currentPage) {
         viewModel.updateCurrentPage(bookName, currentPage);
     }
 
@@ -138,9 +164,11 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        Log.d(TAG, "onOptionsItemSelected: clicked");
+
+
 
         switch (item.getItemId()){
+            //todo
             case R.id.bookmark:
                 Drawable myIcon = getResources().getDrawable( R.drawable.bookmark );
                 Drawable bookmark = menu.getItem(1).getIcon();
@@ -160,13 +188,17 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
 
                 }
                 isBookmark=!isBookmark;
+                return true;
             case R.id.list:
                 NavController controller = Navigation.findNavController(view);
 //                Bundle bundle = new Bundle();
 //                bundle.putString("title", bookName);
                 controller.navigate(R.id.action_l1Fragment_to_l1ChaptersFragment);
+               return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+
     }
 }

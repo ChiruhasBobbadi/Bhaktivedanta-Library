@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class L1BookRepo implements Level1_BooksDao, Level1_PagesDao {
+public class L1Repo implements Level1_BooksDao, Level1_PagesDao {
     Database db;
     private Level1_BooksDao l1dao;
     private Level1_PagesDao l1PDao;
 
-    public L1BookRepo(Application application) {
+    public L1Repo(Application application) {
 
         db = Database.getInstance(application);
 
@@ -53,10 +53,9 @@ public class L1BookRepo implements Level1_BooksDao, Level1_PagesDao {
         return l1PDao.getPages(book);
     }
 
-//    @Override
-//    public void setBookmark(String book, int val) {
-//
-//    }
+    public LiveData<Integer> getPageNumberOfChapter(String book,String chapter) {
+        return l1PDao.getPageNumberOfChapter(book,chapter);
+    }
 
 
     public LiveData<List<String >> getChapters(String book){
