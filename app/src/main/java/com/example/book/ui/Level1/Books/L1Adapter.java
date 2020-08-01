@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,6 +59,7 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
 
         Level1_Pages page = l1Pages.get(position);
 
+        holder.text.setText(page.getChapter() + ". " + page.getChapterName());
         holder.setData(page);
 
 
@@ -92,10 +94,12 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
 
         PurportAdapter adapter;
         RecyclerView rv;
+        TextView text;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             rv = itemView.findViewById(R.id.rv);
+            text = itemView.findViewById(R.id.text);
             rv.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             adapter = new PurportAdapter();
 

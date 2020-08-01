@@ -39,7 +39,7 @@ class L3PurportAdapter extends RecyclerView.Adapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
         if (viewType == 0) {
-            view = inflater.inflate(R.layout.page2, parent, false);
+            view = inflater.inflate(R.layout.page, parent, false);
             return new L3PurportAdapter.ViewHolderRest(view);
         } else if (viewType == 1) {
             view = inflater.inflate(R.layout.purport, parent, false);
@@ -71,9 +71,8 @@ class L3PurportAdapter extends RecyclerView.Adapter {
                 rest.synonyms.setVisibility(View.GONE);
 
 
-            //todo
-            rest.chapter.setText(page.getVerse()+"");
-            //rest.verse.setText(page.getLevel_3_Name().trim());
+
+
 
             if (_translation && (page.getTranslation() != null && page.getTranslation().length() != 0))
                 rest.translation.setText(page.getTranslation());
@@ -84,7 +83,8 @@ class L3PurportAdapter extends RecyclerView.Adapter {
         } else if (position % 2 != 0) {
             L3PurportAdapter.ViewHolderPurport purp = (L3PurportAdapter.ViewHolderPurport) holder;
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
-                purp.purport.setText(purport.get(position - 1));
+                String r = purport.get(position - 1).replace("¶", "¶\n");
+                purp.purport.setText(r);
             } else
                 purp.purport.setVisibility(View.GONE);
         } else {
@@ -114,13 +114,12 @@ class L3PurportAdapter extends RecyclerView.Adapter {
     }
 
     class ViewHolderRest extends RecyclerView.ViewHolder {
-        TextView text, synonyms, translation, chapter;
+        TextView text, synonyms, translation;
 
         public ViewHolderRest(@NonNull View itemView) {
             super(itemView);
             text = itemView.findViewById(R.id.text);
             synonyms = itemView.findViewById(R.id.synonyms);
-            chapter = itemView.findViewById(R.id.chapter);
             translation = itemView.findViewById(R.id.translation);
 
         }

@@ -40,7 +40,7 @@ class L2PurportAdapter extends RecyclerView.Adapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
         if (viewType == 0) {
-            view = inflater.inflate(R.layout.page2, parent, false);
+            view = inflater.inflate(R.layout.page, parent, false);
             return new L2PurportAdapter.ViewHolderRest(view);
         } else if (viewType == 1) {
             view = inflater.inflate(R.layout.purport, parent, false);
@@ -71,7 +71,7 @@ class L2PurportAdapter extends RecyclerView.Adapter {
                 rest.synonyms.setVisibility(View.GONE);
 
 
-            rest.chapter.setText(page.getVerseName() + ". ");
+
             //todo
             //rest.verse.setText(page.getVerse()+"");
 
@@ -84,7 +84,8 @@ class L2PurportAdapter extends RecyclerView.Adapter {
         } else if (position % 2 != 0) {
             L2PurportAdapter.ViewHolderPurport purp = (L2PurportAdapter.ViewHolderPurport) holder;
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
-                purp.purport.setText(purport.get(position - 1));
+                String r = purport.get(position - 1).replace("¶", "¶\n");
+                purp.purport.setText(r);
             } else
                 purp.purport.setVisibility(View.GONE);
         } else {
@@ -114,13 +115,12 @@ class L2PurportAdapter extends RecyclerView.Adapter {
     }
 
     class ViewHolderRest extends RecyclerView.ViewHolder {
-        TextView text, synonyms, translation, chapter;
+        TextView text, synonyms, translation;
 
         public ViewHolderRest(@NonNull View itemView) {
             super(itemView);
             text = itemView.findViewById(R.id.text);
             synonyms = itemView.findViewById(R.id.synonyms);
-            chapter = itemView.findViewById(R.id.chapter);
             translation = itemView.findViewById(R.id.translation);
 
         }

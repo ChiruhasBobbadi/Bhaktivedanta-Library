@@ -74,8 +74,6 @@ public class PurportAdapter extends RecyclerView.Adapter {
                 rest.synonyms.setVisibility(View.GONE);
 
 
-            rest.chapter.setText(page.getChapter() + ". " + page.getChapterName());
-
             if (_translation && (page.getTranslation() != null && page.getTranslation().length() != 0))
                 rest.translation.setText(page.getTranslation());
             else
@@ -85,7 +83,8 @@ public class PurportAdapter extends RecyclerView.Adapter {
         } else if (position % 2 != 0) {
             ViewHolderPurport purp = (ViewHolderPurport) holder;
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
-                purp.purport.setText(purport.get(position - 1));
+                String r = purport.get(position - 1).replace("¶", "¶\n");
+                purp.purport.setText(r);
             } else
                 purp.purport.setVisibility(View.GONE);
         } else {
@@ -115,13 +114,12 @@ public class PurportAdapter extends RecyclerView.Adapter {
     }
 
     class ViewHolderRest extends RecyclerView.ViewHolder {
-        TextView text, synonyms, translation, chapter;
+        TextView text, synonyms, translation;
 
         public ViewHolderRest(@NonNull View itemView) {
             super(itemView);
             text = itemView.findViewById(R.id.text);
             synonyms = itemView.findViewById(R.id.synonyms);
-            chapter = itemView.findViewById(R.id.chapter);
             translation = itemView.findViewById(R.id.translation);
         }
     }
