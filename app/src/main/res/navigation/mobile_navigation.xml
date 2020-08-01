@@ -149,4 +149,19 @@
             app:popUpTo="@id/navigation_books"
             app:popUpToInclusive="false"/>
     </fragment>
+    <fragment
+        android:id="@+id/quick_access"
+        android:name="com.example.book.ui.quick_access.QuickAccessFragment"
+        android:label="@string/title_quick_access"
+        tools:layout="@layout/fragment_quick_access" >
+        <action
+            android:id="@+id/action_quick_access_to_l1Fragment"
+            app:destination="@id/l1Fragment" />
+        <action
+            android:id="@+id/action_quick_access_to_l3Fragment"
+            app:destination="@id/l3Fragment" />
+        <action
+            android:id="@+id/action_quick_access_to_l2Fragment"
+            app:destination="@id/l2Fragment" />
+    </fragment>
 </navigation>

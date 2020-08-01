@@ -10,6 +10,11 @@
         android:id="@+id/navigation_search"
         android:icon="@drawable/search"
         android:title="@string/title_search" />
+    <item
+        android:id="@+id/quick_access"
+        android:icon="@drawable/quick_access"
+        android:title="@string/title_quick_access" />
+
 
     <item
         android:id="@+id/navigation_bookmarks"

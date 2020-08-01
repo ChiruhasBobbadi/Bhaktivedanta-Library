@@ -21,9 +21,17 @@ public class LookUpRepo {
 
         lookUpDao = db.lookUpDao();
         all = lookUpDao.getAll();
+
     }
 
     public LiveData<List<LookupTable>> getAllLevels(){
         return all;
+    }
+
+    public LiveData<List<String>> getBooks(){
+        return  lookUpDao.getBooks();
+    }
+    public LiveData<Integer> getLevel(String book){
+        return  lookUpDao.getLevel(book);
     }
 }

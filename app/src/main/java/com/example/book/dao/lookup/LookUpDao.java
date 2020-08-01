@@ -15,4 +15,10 @@ public interface LookUpDao {
     @Query("SELECT * FROM lookup")
     LiveData<List<LookupTable>> getAll();
 
+    @Query("SELECT bookName FROM lookup")
+    LiveData<List<String>> getBooks();
+
+    @Query("SELECT level from lookup where bookName=:book")
+    LiveData<Integer> getLevel(String book);
+
 }

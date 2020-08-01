@@ -10,7 +10,7 @@ public class BookmarksViewModel extends ViewModel {
 
     public BookmarksViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is Bookmarks");
     }
 
     public LiveData<String> getText() {
