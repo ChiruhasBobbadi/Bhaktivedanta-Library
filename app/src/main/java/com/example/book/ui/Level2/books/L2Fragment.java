@@ -103,11 +103,12 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener {
 
         if (getArguments().containsKey("pageNumber") && getArguments().getString("pageNumber") != null) {
             String t = getArguments().getString("pageNumber");
-
+            Log.d(TAG, "checkIfFromVerse: "+t);
             String a[] = t.split("-");
 
             if (a.length == 2) {
                 isFromVerse = true;
+                Log.d(TAG, "checkIfFromVerse: "+a[0]);
                 scrollTo = Integer.parseInt(a[0]);
             }
         }

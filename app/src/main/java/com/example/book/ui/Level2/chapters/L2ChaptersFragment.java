@@ -56,10 +56,10 @@ public class L2ChaptersFragment extends Fragment {
     private void listItemClick() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             String chap = chapters.get(position);
-            v = view;
-
+                v = view;
+                String c = chap.split("\\.")[1];
                 Bundle bundle = new Bundle();
-                bundle.putString("chapter",chap);
+                bundle.putString("chapter",c);
                 bundle.putString("title",bookName);
 
                 NavController controller = Navigation.findNavController(view);
@@ -77,8 +77,11 @@ public class L2ChaptersFragment extends Fragment {
 
         viewModel.getChapters(bookName).observe(getViewLifecycleOwner(), strings -> {
 
-            Log.d(TAG, "viewModelCalls: "+strings.size());
             chapters = strings;
+            for (int i = 0; i < chapters.size(); i++) {
+                chapters.set(i,(i+1)+". "+chapters.get(i));
+            }
+
             createListView(chapters);
 
         });

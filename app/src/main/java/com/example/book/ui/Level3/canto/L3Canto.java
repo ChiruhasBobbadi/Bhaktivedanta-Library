@@ -1,40 +1,39 @@
-package com.example.book.ui.Level1.chapters;
+package com.example.book.ui.Level3.canto;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.example.book.R;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import java.util.ArrayList;
+import com.example.book.R;
+import com.example.book.ui.Level2.chapters.L2ChaptersViewModel;
+import com.example.book.ui.Level3.Chapters.L3ChapterViewModel;
+
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class L1ChaptersFragment extends Fragment {
-
-
-    private static final String TAG = "L1ChaptersFragment";
+public class L3Canto extends Fragment {
+    private static final String TAG = "L3Canto";
     SharedPreferences sharedpreferences;
     String bookName;
-    L1ChaptersViewModel viewModel;
-    List<String> chapters;
+    L3CantoViewModel viewModel;
+    List<String> canto;
     ListView listView;
     View v;
 
-    public L1ChaptersFragment() {
+    public L3Canto() {
         // Required empty public constructor
     }
 
@@ -42,7 +41,7 @@ public class L1ChaptersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_l1_chapters, container, false);
+        View root = inflater.inflate(R.layout.fragment_l3_canto, container, false);
 
         listView = root.findViewById(R.id.list);
 
@@ -56,35 +55,34 @@ public class L1ChaptersFragment extends Fragment {
 
     private void listItemClick() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
-
-            String chap = chapters.get(position).split("\\.")[1].trim();
+            String can = canto.get(position);
             v = view;
-            viewModel.getPageNumberOfChapter(bookName,chap).observe(getViewLifecycleOwner(), number -> {
+            String c = can.split("\\.")[1];
+            Bundle bundle = new Bundle();
+            bundle.putString("canto",c);
+            bundle.putString("title",bookName);
 
-                Bundle bundle = new Bundle();
-                bundle.putString("pageNumber", number+"-"+"level1");
-                bundle.putString("title",bookName);
+            NavController controller = Navigation.findNavController(view);
 
-                NavController controller = Navigation.findNavController(view);
+            controller.navigate(R.id.action_l3Canto_to_l3ChapterFragment,bundle);
 
-                controller.navigate(R.id.action_l1ChaptersFragment_to_l1Fragment,bundle);
 
-            });
 
 
         });
     }
 
     private void viewModelCalls() {
-        viewModel = ViewModelProviders.of(this).get(L1ChaptersViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(L3CantoViewModel.class);
 
-        viewModel.getChapters(bookName).observe(getViewLifecycleOwner(), strings -> {
-            chapters = strings;
+        viewModel.getCanto(bookName).observe(getViewLifecycleOwner(), strings -> {
 
-            for (int i = 0; i < chapters.size(); i++) {
-                chapters.set(i,(i+1)+". "+chapters.get(i));
+             canto = strings;
+            for (int i = 0; i < canto.size(); i++) {
+                canto.set(i,(i+1)+". "+canto.get(i));
             }
-            createListView(chapters);
+
+            createListView(canto);
 
         });
     }
@@ -100,6 +98,4 @@ public class L1ChaptersFragment extends Fragment {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.chapter_view, list);
         listView.setAdapter(arrayAdapter);
     }
-
-
 }

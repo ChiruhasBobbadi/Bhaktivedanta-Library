@@ -12,7 +12,7 @@ public interface Level3_BooksDao {
     @Query("select currentPage from level3_books where bookName=:book")
     LiveData<Integer> getCurrentPage(String book);
 
-    @Query("UPDATE level3_books SET currentPage = :page WHERE bookName =:book")
+    @Query("UPDATE level3_books SET currentPage =:page WHERE bookName =:book")
     void updateCurrentPage(String book,int page);
 
     @Query("select * from level3_books where bookName=:book")

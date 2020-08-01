@@ -1,6 +1,7 @@
 package com.example.book.database;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -19,7 +20,7 @@ public class L3Repo {
     Database db;
     private Level3_BooksDao l3dao;
     private Level3_PagesDao l3PDao;
-
+    private static final String TAG = "L3Repo";
     public L3Repo(Application application) {
 
         db = Database.getInstance(application);
@@ -37,7 +38,7 @@ public class L3Repo {
     public void updateCurrentPage(String book, int page) {
 
         Runnable runnable = () -> {
-            db.level2_booksDao().updateCurrentPage(book, page);
+            db.level3_booksDao().updateCurrentPage(book, page);
         };
         ExecutorService ex = Executors.newSingleThreadExecutor();
         ex.submit(runnable);
@@ -54,16 +55,23 @@ public class L3Repo {
         return l3PDao.getPages(book);
     }
 
-    public LiveData<Integer> getPageNumberOfVerse(String book, String chapter, String verse) {
-        return l3PDao.getPageNumberOfVerse(book, chapter, verse);
+    public LiveData<Integer> getPageNumberOfVerse(String book,String canto, String chapter, String verse) {
+        return l3PDao.getPageNumberOfVerse(book,canto, chapter, verse);
     }
 
 
-    public LiveData<List<String>> getChapters(String book) {
-        return l3PDao.getChapters(book);
+    public LiveData<List<String>> getChapters(String book,String canto) {
+        return l3PDao.getChapters(book,canto);
     }
 
-    public LiveData<List<Integer>> getVerses(String book, String chapter) {
-        return l3PDao.getVerses(book, chapter);
+    //todo
+    public LiveData<List<Integer>> getVerses(String book,String canto, String chapter) {
+        return l3PDao.getVerses(book,canto, chapter);
     }
+
+
+    public LiveData<List<String>> getCanto(String book) {
+        return l3PDao.getCantos(book);
+    }
+
 }

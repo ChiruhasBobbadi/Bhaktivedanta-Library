@@ -1,4 +1,4 @@
-package com.example.book.ui.Level2.Verse;
+package com.example.book.ui.Level3.verse;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,24 +15,26 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.book.R;
+import com.example.book.ui.Level2.Verse.L2VerseViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class L2VerseFragment extends Fragment {
+public class L3VerseFragment extends Fragment {
 
-    private static final String TAG = "L2ChaptersFragment";
     SharedPreferences sharedpreferences;
     String bookName;
-    L2VerseViewModel viewModel;
+    L3VerseViewModel viewModel;
     List<String> verses;
     ListView listView;
     View v;
     String chapter;
-
-    public L2VerseFragment() {
+    private static final String TAG = "L3VerseFragment";
+    String canto;
+    public L3VerseFragment() {
         // Required empty public constructor
     }
 
@@ -40,7 +42,7 @@ public class L2VerseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_l2_verse, container, false);
+        View root = inflater.inflate(R.layout.fragment_l3_verse, container, false);
         init();
         listView = root.findViewById(R.id.list);
         viewModelCalls();
@@ -51,19 +53,24 @@ public class L2VerseFragment extends Fragment {
 
     private void listItemClick() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            String verse = verses.get(position).split("\\.")[1].trim();
+            //todo
+            //String verse = verses.get(position).split("\\.")[1].trim();
+
+            String verse = verses.get(position);
+
             v = view;
 
 
-            viewModel.getPageNumberOfVerse(bookName, chapter.trim(), verse).observe(getViewLifecycleOwner(), number -> {
+            viewModel.getPageNumberOfVerse(bookName,canto,chapter.trim(), verse).observe(getViewLifecycleOwner(), number -> {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("pageNumber", number + "-" + "level2");
+                Log.d(TAG, "pageNumber: "+number);
+                bundle.putString("pageNumber", number + "-" + "level3");
                 bundle.putString("title", bookName);
 
                 NavController controller = Navigation.findNavController(view);
 
-                controller.navigate(R.id.action_l2VerseFragment_to_l2Fragment, bundle);
+                controller.navigate(R.id.action_l3VerseFragment_to_l3Fragment, bundle);
 
             });
 
@@ -72,27 +79,28 @@ public class L2VerseFragment extends Fragment {
     }
 
     private void viewModelCalls() {
-        viewModel = ViewModelProviders.of(this).get(L2VerseViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(L3VerseViewModel.class);
 
-        chapter = getArguments().getString("chapter");
-        Log.d(TAG, "viewModelCalls: "+chapter);
+        chapter = getArguments().getString("chapter").trim();
+        canto = getArguments().getString("canto").trim();
+        viewModel.getVerses(bookName,canto, chapter).observe(getViewLifecycleOwner(), strings -> {
 
-        viewModel.getVerses(bookName, chapter.trim()).observe(getViewLifecycleOwner(), strings -> {
+            Log.d(TAG, "viewModelCalls: " + strings);
 
-            Log.d(TAG, "viewModelCalls: " + strings.size());
-            verses = strings;
 
+            List<String> list = new ArrayList<>();
             //todo
-            if (verses.get(0) == null) {
-                for (int i = 0; i < verses.size(); i++) {
-                    verses.add(i, (i + 1) + "");
+            if (strings.get(0) == null) {
+                for (int i = 0; i < strings.size(); i++) {
+                    list.add(i, (strings.get(i))+"");
                 }
             } else {
-                for (int i = 0; i < verses.size(); i++) {
-                    verses.set(i, (i + 1) + ". " + verses.get(i));
+                for (int i = 0; i < strings.size(); i++) {
+                    list.add(i, (strings.get(i))+"");
                 }
             }
-            createListView(verses);
+            verses =list;
+            createListView(list);
 
         });
     }

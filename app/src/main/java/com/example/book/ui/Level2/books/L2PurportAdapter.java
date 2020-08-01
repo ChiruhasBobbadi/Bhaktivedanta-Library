@@ -71,8 +71,9 @@ class L2PurportAdapter extends RecyclerView.Adapter {
                 rest.synonyms.setVisibility(View.GONE);
 
 
-            rest.chapter.setText(page.getChapter() + ". " + page.getChapterName());
-            rest.verse.setText(page.getVerseName().trim());
+            rest.chapter.setText(page.getVerseName() + ". ");
+            //todo
+            //rest.verse.setText(page.getVerse()+"");
 
             if (_translation && (page.getTranslation() != null && page.getTranslation().length() != 0))
                 rest.translation.setText(page.getTranslation());
@@ -113,7 +114,7 @@ class L2PurportAdapter extends RecyclerView.Adapter {
     }
 
     class ViewHolderRest extends RecyclerView.ViewHolder {
-        TextView text, synonyms, translation, chapter,verse;
+        TextView text, synonyms, translation, chapter;
 
         public ViewHolderRest(@NonNull View itemView) {
             super(itemView);
@@ -121,7 +122,7 @@ class L2PurportAdapter extends RecyclerView.Adapter {
             synonyms = itemView.findViewById(R.id.synonyms);
             chapter = itemView.findViewById(R.id.chapter);
             translation = itemView.findViewById(R.id.translation);
-            verse = itemView.findViewById(R.id.verse);
+
         }
     }
 

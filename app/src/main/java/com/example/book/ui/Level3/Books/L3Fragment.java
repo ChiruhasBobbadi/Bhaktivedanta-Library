@@ -67,10 +67,11 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
 
         if (!isFromVerse)
             viewModel.getCurrentPage(bookName).observe(getViewLifecycleOwner(), integer -> {
-
+                Log.d(TAG, "viewModelCall: "+integer);
                 if (scrollTo == -1) {
                     rv.scrollToPosition(integer - 1);
                     scrollTo = integer;
+
                 }
 
             });
@@ -105,6 +106,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
 
             if (a.length == 2) {
                 isFromVerse = true;
+                Log.d(TAG, "checkIfFromVerse: "+a[0]);
                 scrollTo = Integer.parseInt(a[0]);
             }
         }
@@ -188,7 +190,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
                 NavController controller = Navigation.findNavController(view);
 //                Bundle bundle = new Bundle();
 //                bundle.putString("title", bookName);
-                controller.navigate(R.id.action_l2Fragment_to_l2Chapters);
+                controller.navigate(R.id.action_l3Fragment_to_l3Canto);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
