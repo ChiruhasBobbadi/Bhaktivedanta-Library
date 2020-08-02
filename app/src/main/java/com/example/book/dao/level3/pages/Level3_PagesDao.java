@@ -20,11 +20,10 @@ public interface Level3_PagesDao {
     @Query("select DISTINCT level_3_Name from level3_pages where bookName=:book ORDER by level_3")
     LiveData<List<String>> getCantos(String book);
 
-    //todo
-    @Query("select pageNumber from level3_pages WHERE (bookName=:book and level_3_Name=:canto)  and (chapterName=:chapter and verse=:verse) ")
+    @Query("select pageNumber from level3_pages WHERE (bookName=:book and level_3_Name=:canto)  and (chapterName=:chapter and verseName=:verse) ")
     LiveData<Integer> getPageNumberOfVerse(String book,String canto,String chapter,String verse);
 
-    @Query("select verse from level3_pages where (bookName=:book and level_3_Name=:canto) and chapterName=:chapter ORDER by verse")
-    LiveData<List<Integer>> getVerses(String book,String canto, String chapter);
+    @Query("select verseName from level3_pages where (bookName=:book and level_3_Name=:canto) and chapterName=:chapter ORDER by verse")
+    LiveData<List<String>> getVerses(String book,String canto, String chapter);
 
 }

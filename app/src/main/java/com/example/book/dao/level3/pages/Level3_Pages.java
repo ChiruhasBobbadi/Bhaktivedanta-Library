@@ -30,6 +30,8 @@ public class Level3_Pages {
     private int level_3;
     @NonNull
     private String level_3_Name;
+    @NonNull
+    private String verseName;
 
     public int getId() {
         return id;
@@ -55,11 +57,12 @@ public class Level3_Pages {
         this.pageNumber = pageNumber;
     }
 
+    @NonNull
     public String getBookName() {
         return bookName;
     }
 
-    public void setBookName(String bookName) {
+    public void setBookName(@NonNull String bookName) {
         this.bookName = bookName;
     }
 
@@ -71,43 +74,48 @@ public class Level3_Pages {
         this.verse = verse;
     }
 
+    @NonNull
     public String getChapterName() {
         return chapterName;
     }
 
-    public void setChapterName(String chapterName) {
+    public void setChapterName(@NonNull String chapterName) {
         this.chapterName = chapterName;
     }
 
+    @NonNull
     public String getPurport() {
         return purport;
     }
 
-    public void setPurport(String purport) {
+    public void setPurport(@NonNull String purport) {
         this.purport = purport;
     }
 
+    @NonNull
     public String getSynonyms() {
         return synonyms;
     }
 
-    public void setSynonyms(String synonyms) {
+    public void setSynonyms(@NonNull String synonyms) {
         this.synonyms = synonyms;
     }
 
+    @NonNull
     public String getText() {
         return text;
     }
 
-    public void setText(String text) {
+    public void setText(@NonNull String text) {
         this.text = text;
     }
 
+    @NonNull
     public String getTranslation() {
         return translation;
     }
 
-    public void setTranslation(String translation) {
+    public void setTranslation(@NonNull String translation) {
         this.translation = translation;
     }
 
@@ -119,15 +127,25 @@ public class Level3_Pages {
         this.level_3 = level_3;
     }
 
+    @NonNull
     public String getLevel_3_Name() {
         return level_3_Name;
     }
 
-    public void setLevel_3_Name(String level_3_Name) {
+    public void setLevel_3_Name(@NonNull String level_3_Name) {
         this.level_3_Name = level_3_Name;
     }
 
-    public Level3_Pages(int id, int chapter, int pageNumber, String bookName, int verse, String chapterName, String purport, String synonyms, String text, String translation, int level_3, String level_3_Name) {
+    @NonNull
+    public String getVerseName() {
+        return verseName;
+    }
+
+    public void setVerseName(@NonNull String verseName) {
+        this.verseName = verseName;
+    }
+
+    public Level3_Pages(int id, int chapter, int pageNumber, @NonNull String bookName, int verse, @NonNull String chapterName, @NonNull String purport, @NonNull String synonyms, @NonNull String text, @NonNull String translation, int level_3, @NonNull String level_3_Name, @NonNull String verseName) {
         this.id = id;
         this.chapter = chapter;
         this.pageNumber = pageNumber;
@@ -140,5 +158,6 @@ public class Level3_Pages {
         this.translation = translation;
         this.level_3 = level_3;
         this.level_3_Name = level_3_Name;
+        this.verseName = verseName;
     }
 }

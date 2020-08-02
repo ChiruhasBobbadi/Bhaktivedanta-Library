@@ -12,9 +12,9 @@ public class Level3_Books {
     private int pagesCount;
     @NonNull
     private int currentPage;
-    @NonNull
+
     private String introduction;
-    @NonNull
+
     private String preface;
     @NonNull
     private String bookName;

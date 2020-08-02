@@ -71,10 +71,6 @@ class L2PurportAdapter extends RecyclerView.Adapter {
                 rest.synonyms.setVisibility(View.GONE);
 
 
-
-            //todo
-            //rest.verse.setText(page.getVerse()+"");
-
             if (_translation && (page.getTranslation() != null && page.getTranslation().length() != 0))
                 rest.translation.setText(page.getTranslation());
             else

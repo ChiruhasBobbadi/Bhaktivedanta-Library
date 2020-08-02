@@ -100,7 +100,7 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
 
     private void checkIfFromChapter() {
 
-        if(getArguments().containsKey("pageNumber") && getArguments().getString("pageNumber")!=null){
+        if(  getArguments().getString("pageNumber")!=null && getArguments().containsKey("pageNumber") ){
             String t = getArguments().getString("pageNumber");
 
             String a[] = t.split("-");

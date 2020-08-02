@@ -15,7 +15,7 @@
         android:paddingEnd="4dp"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color"
         android:typeface="sans"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

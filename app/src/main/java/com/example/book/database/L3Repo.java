@@ -64,8 +64,7 @@ public class L3Repo {
         return l3PDao.getChapters(book,canto);
     }
 
-    //todo
-    public LiveData<List<Integer>> getVerses(String book,String canto, String chapter) {
+    public LiveData<List<String>> getVerses(String book,String canto, String chapter) {
         return l3PDao.getVerses(book,canto, chapter);
     }
 

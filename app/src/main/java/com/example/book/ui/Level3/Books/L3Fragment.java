@@ -49,7 +49,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        View root = inflater.inflate(R.layout.fragment_l2, container, false);
+        View root = inflater.inflate(R.layout.fragment_l3, container, false);
         view = root;
         checkIfFromVerse();
         getBookName();

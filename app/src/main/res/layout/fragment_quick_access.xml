@@ -5,6 +5,7 @@
     android:id="@+id/frameLayout6"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".ui.quick_access.QuickAccessFragment">
 
     <TextView
@@ -13,8 +14,9 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="Book Name"
+
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline7" />
@@ -24,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:padding="16dp"
         android:textColor="@color/black"
@@ -47,7 +50,7 @@
         android:text="Canto"
         android:visibility="gone"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name" />
@@ -56,8 +59,8 @@
         android:id="@+id/canto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:padding="16dp"
         android:textColor="@color/black"
         android:visibility="gone"
@@ -73,7 +76,7 @@
         android:text="Verse"
         android:visibility="gone"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chapter" />
@@ -82,8 +85,8 @@
         android:id="@+id/chapter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:visibility="gone"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,7 +102,7 @@
         android:visibility="gone"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
 
-        android:textColor="@color/black"
+        android:textColor="@color/text_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,8 +112,8 @@
         android:id="@+id/verse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:visibility="gone"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"

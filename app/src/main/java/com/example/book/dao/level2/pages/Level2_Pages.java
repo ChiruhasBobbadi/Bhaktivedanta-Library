@@ -22,6 +22,7 @@ public class Level2_Pages {
     private String synonyms;
     private String text;
     private String translation;
+    @NonNull
     private String verseName;
 
     public int getId() {

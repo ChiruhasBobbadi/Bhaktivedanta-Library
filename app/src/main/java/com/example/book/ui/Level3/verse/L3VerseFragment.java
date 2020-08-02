@@ -53,13 +53,10 @@ public class L3VerseFragment extends Fragment {
 
     private void listItemClick() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            //todo
-            //String verse = verses.get(position).split("\\.")[1].trim();
 
-            String verse = verses.get(position);
-
+            String verse = verses.get(position).split("\\.",2)[1].trim();
             v = view;
-
+            Log.d(TAG, "listItemClick: "+verse);
 
             viewModel.getPageNumberOfVerse(bookName,canto,chapter.trim(), verse).observe(getViewLifecycleOwner(), number -> {
 
@@ -85,20 +82,12 @@ public class L3VerseFragment extends Fragment {
         canto = getArguments().getString("canto").trim();
         viewModel.getVerses(bookName,canto, chapter).observe(getViewLifecycleOwner(), strings -> {
 
-            Log.d(TAG, "viewModelCalls: " + strings);
+                List<String> list = new ArrayList<>();
 
+                for (int i = 0; i < strings.size(); i++) {
+                    list.add(i, ((i+1)+". "+strings.get(i)));
+                }
 
-            List<String> list = new ArrayList<>();
-            //todo
-            if (strings.get(0) == null) {
-                for (int i = 0; i < strings.size(); i++) {
-                    list.add(i, (strings.get(i))+"");
-                }
-            } else {
-                for (int i = 0; i < strings.size(); i++) {
-                    list.add(i, (strings.get(i))+"");
-                }
-            }
             verses =list;
             createListView(list);
 

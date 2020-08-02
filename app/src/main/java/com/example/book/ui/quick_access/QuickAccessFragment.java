@@ -239,14 +239,21 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
         });
     }
 
-    //todo
+
     private void setL3Verse() {
         viewModel.l3Repo.getVerses(bookName, _canto, _chapter).observe(getViewLifecycleOwner(), ver -> {
+            viewModel.l3Repo.getVerses(bookName,_canto,_chapter).observe(getViewLifecycleOwner(), can -> {
+                List<String> temp = new ArrayList<>();
+                temp.add("Select Verse");
+                can.add(0, "Select Verse");
+                verses = can;
+                for (int i = 1; i < can.size(); i++) {
+                    temp.add((i) + ". " + can.get(i));
+                }
+                verse.setItems(temp);
+            });
 
 
-          /*  chap.add(0,"Select chapter");
-            chapter.setItems(chap);
-            chapters = chap;*/
         });
     }
 
@@ -260,8 +267,9 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
                 temp.add((i) + ". " + can.get(i));
             }
             canto.setItems(temp);
+            setL3Chapters();
         });
-        setL3Chapters();
+
     }
 
     public void getL1PageNumber() {
@@ -279,8 +287,8 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
     }
 
     public void getL3PageNumber() {
-        viewModel.l1Repo.getPageNumberOfChapter(bookName,_chapter).observe(getViewLifecycleOwner(), integer -> {
-            viewModel.l1Repo.updateCurrentPage(bookName,integer);
+        viewModel.l3Repo.getPageNumberOfVerse(bookName,_canto,_chapter,_verse).observe(getViewLifecycleOwner(), integer -> {
+            viewModel.l3Repo.updateCurrentPage(bookName,integer);
             controller.navigate(R.id.action_quick_access_to_l3Fragment,bundle);
         });
     }

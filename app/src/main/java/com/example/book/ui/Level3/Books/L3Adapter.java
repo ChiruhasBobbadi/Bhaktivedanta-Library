@@ -49,8 +49,8 @@ class L3Adapter extends RecyclerView.Adapter<L3Adapter.ViewHolder> {
         v.vibrate(20);
 
         Level3_Pages page = l3Pages.get(position);
-        // todo
-        holder.text.setText(page.getVerse()+"");
+
+        holder.text.setText(page.getVerse()+". "+page.getVerseName());
         holder.setData(page);
     }
     public void setData(List<Level3_Pages> pages, boolean text, boolean purport, boolean trans, boolean syn) {

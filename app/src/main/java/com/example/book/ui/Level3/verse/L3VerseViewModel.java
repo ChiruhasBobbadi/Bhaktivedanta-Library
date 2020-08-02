@@ -21,11 +21,9 @@ public class L3VerseViewModel extends AndroidViewModel {
         repo = new L3Repo(application);
 
     }
-    //todo
-    public LiveData<List<Integer>> getVerses(String book,String canto, String chapter) {
-        Log.d(TAG, "book: "+book);
-        Log.d(TAG, "canto: "+canto );
-        Log.d(TAG, "chapter: "+chapter);
+
+    public LiveData<List<String>> getVerses(String book,String canto, String chapter) {
+
         return repo.getVerses(book,canto,chapter);
     }
 
