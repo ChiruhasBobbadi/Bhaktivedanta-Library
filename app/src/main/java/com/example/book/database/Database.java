@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.book.dao.bookmarks.Bookmarks;
+import com.example.book.dao.bookmarks.BookmarksDao;
 import com.example.book.dao.level1.books.Level1_Books;
 import com.example.book.dao.level1.books.Level1_BooksDao;
 import com.example.book.dao.level1.pages.Level1_Pages;
@@ -19,13 +21,18 @@ import com.example.book.dao.level3.pages.Level3_Pages;
 import com.example.book.dao.level3.pages.Level3_PagesDao;
 import com.example.book.dao.lookup.LookUpDao;
 import com.example.book.dao.lookup.LookupTable;
+import com.example.book.dao.tags.Tags;
+import com.example.book.dao.tags.TagsDao;
 
 
 @androidx.room.Database
         (entities = {LookupTable.class,
                 Level1_Books.class, Level1_Pages.class,
-                Level2_Books.class, Level2_Pages.class, Level3_Books.class, Level3_Pages.class}, version = 3)
-abstract class Database extends RoomDatabase {
+                Level2_Books.class, Level2_Pages.class,
+                Level3_Books.class, Level3_Pages.class,
+                Bookmarks.class, Tags.class
+        }, version = 6)
+public abstract class Database extends RoomDatabase {
 
     private static Database instance;
 
@@ -53,4 +60,8 @@ abstract class Database extends RoomDatabase {
     public abstract Level3_BooksDao level3_booksDao();
 
     public abstract Level3_PagesDao level3_pagesDao();
+
+    public abstract BookmarksDao bookmarksDao();
+
+    public abstract TagsDao tagsDao();
 }

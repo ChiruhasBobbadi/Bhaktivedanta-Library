@@ -19,4 +19,15 @@
 
     </style>
 
+    <style name="ThemeOverlay.SearchView" parent="">
+        <!-- Text color -->
+        <item name="android:editTextColor">@color/text_color</item>
+        <!-- Hint text color -->
+        <item name="android:textColorHint">@color/text_color_nrml</item>
+            <item name="android:background">@drawable/rounded_corners</item>
+        <item name="closeIconTint">@color/bottom_nav_item_tint</item>
+
+
+    </style>
+
 </resources>

@@ -73,4 +73,9 @@ public class L3Repo {
         return l3PDao.getCantos(book);
     }
 
+
+    public LiveData<List<Level3_Pages>> getMatchedL3Pages(String key){
+        return l3PDao.getMatchedL3Pages(key);
+    }
+
 }

@@ -8,7 +8,6 @@ import com.example.book.dao.level1.books.Level1_Books;
 import com.example.book.dao.level1.books.Level1_BooksDao;
 import com.example.book.dao.level1.pages.Level1_Pages;
 import com.example.book.dao.level1.pages.Level1_PagesDao;
-import com.example.book.dao.lookup.LookupTable;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -24,7 +23,7 @@ public class L1Repo implements Level1_BooksDao, Level1_PagesDao {
         db = Database.getInstance(application);
 
         l1dao = db.level1_booksDao();
-        l1PDao =db.level1_pagesDao();
+        l1PDao = db.level1_pagesDao();
     }
 
     @Override
@@ -36,9 +35,9 @@ public class L1Repo implements Level1_BooksDao, Level1_PagesDao {
     public void updateCurrentPage(String book, int page) {
 
         Runnable runnable = () -> {
-            db.level1_booksDao().updateCurrentPage(book,page);
+            db.level1_booksDao().updateCurrentPage(book, page);
         };
-        ExecutorService ex  = Executors.newSingleThreadExecutor();
+        ExecutorService ex = Executors.newSingleThreadExecutor();
         ex.submit(runnable);
 
     }
@@ -53,14 +52,18 @@ public class L1Repo implements Level1_BooksDao, Level1_PagesDao {
         return l1PDao.getPages(book);
     }
 
-    public LiveData<Integer> getPageNumberOfChapter(String book,String chapter) {
-        return l1PDao.getPageNumberOfChapter(book,chapter);
+    public LiveData<Integer> getPageNumberOfChapter(String book, String chapter) {
+        return l1PDao.getPageNumberOfChapter(book, chapter);
     }
 
 
-    public LiveData<List<String >> getChapters(String book){
+    public LiveData<List<String>> getChapters(String book) {
         return l1PDao.getChapters(book);
     }
 
+
+    public LiveData<List<Level1_Pages>> getMatchedL1Pages(String key){
+        return l1PDao.getMatchedL1Pages(key);
+    }
 
 }

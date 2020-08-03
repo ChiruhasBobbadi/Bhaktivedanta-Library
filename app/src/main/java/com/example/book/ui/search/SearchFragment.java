@@ -1,66 +1,189 @@
 package com.example.book.ui.search;
 
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.book.Model.SearchModel;
 import com.example.book.R;
+import com.example.book.dao.level1.pages.Level1_Pages;
+import com.example.book.dao.level2.pages.Level2_Pages;
+import com.example.book.dao.level3.pages.Level3_Pages;
+import com.example.book.ui.quick_access.QuickAccessViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SearchFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import static android.content.Context.MODE_PRIVATE;
+import static android.widget.LinearLayout.VERTICAL;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    public SearchFragment() {
-        // Required empty public constructor
-    }
+public class SearchFragment extends Fragment implements SearchAdapter.ItemListener {
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private static final String TAG = "SearchFragment";
+    SearchAdapter adapter;
+    SearchViewModel viewModel;
+    List<SearchModel> searchResults;
+    SharedPreferences.Editor editor;
+    QuickAccessViewModel quickAccessViewModel;
+    SharedPreferences sharedpreferences;
+    private Menu menu;
+    private RecyclerView rv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        View root = inflater.inflate(R.layout.fragment_search, container, false);
+        viewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
+        quickAccessViewModel = ViewModelProviders.of(this).get(QuickAccessViewModel.class);
+        rv = root.findViewById(R.id.rv);
+        adapter = new SearchAdapter(this);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
+        itemDecor.setDrawable(getActivity().getResources().getDrawable(R.drawable.divider));
+        rv.addItemDecoration(itemDecor);
+
+        rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rv.setAdapter(adapter);
+
+        searchResults = new ArrayList<>();
+
+        return root;
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.search, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
+        View searchPlate = searchView.findViewById(searchPlateId);
+        if (searchPlate != null) {
+            searchPlate.setBackgroundColor(Color.TRANSPARENT);
+            int searchTextId = searchPlate.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                //Log.d(TAG, "before clearing "+searchResults.size());
+                searchResults.clear();
+                adapter.setData(searchResults);
+
+                Log.d(TAG, "onQueryTextChange: " + s);
+                if (s.trim().startsWith("#"))
+                    tagSearch(s.toLowerCase());
+                else if (s.equals("")) {
+                    searchResults.clear();
+                    adapter.setData(searchResults);
+                } else {
+                    searchDb(s.trim());
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+
+                return false;
+            }
+        });
+
+        searchView.setOnCloseListener(() -> {
+            searchResults.clear();
+            adapter.setData(searchResults);
+            return false;
+        });
+
+    }
+
+    private void searchDb(String string) {
+        fetchL1Results(string);
+    }
+
+    private void fetchL1Results(String string) {
+        viewModel.getMatchedL1Pages(string).observe(getViewLifecycleOwner(), results -> {
+            for (int i = 0; i < results.size(); i++) {
+                Level1_Pages page = results.get(i);
+                searchResults.add(new SearchModel(page.getPageNumber(), page.getBookName(), page.getChapterName(), 1));
+            }
+            fetchL2Results(string);
+        });
+    }
+
+    private void fetchL2Results(String string) {
+        viewModel.getMatchedL2Pages(string).observe(getViewLifecycleOwner(), results -> {
+            for (int i = 0; i < results.size(); i++) {
+                Level2_Pages page = results.get(i);
+                searchResults.add(new SearchModel(page.getPageNumber(), page.getBookName(), page.getVerseName(), 2));
+            }
+            fetchL3Results(string);
+        });
+    }
+
+    private void fetchL3Results(String string) {
+        viewModel.getMatchedL3Pages(string).observe(getViewLifecycleOwner(), results -> {
+            for (int i = 0; i < results.size(); i++) {
+                Level3_Pages page = results.get(i);
+                searchResults.add(new SearchModel(page.getPageNumber(), page.getBookName(), page.getVerseName(), 3));
+            }
+            adapter.setData(searchResults);
+        });
+    }
+
+    private void tagSearch(String string) {
+
+    }
+
+
+    @Override
+    public void itemClicked(SearchModel bookmark, View v) {
+
+        NavController controller = Navigation.findNavController(v);
+        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
+                MODE_PRIVATE);
+        editor = sharedpreferences.edit();
+        editor.putString("bookName", bookmark.getBookName());
+        editor.apply();
+        Bundle bundle = new Bundle();
+        bundle.putString("title", bookmark.getBookName());
+        switch (bookmark.getLevel()) {
+            case 1:
+                quickAccessViewModel.l1Repo.updateCurrentPage(bookmark.getBookName(), bookmark.getPageNumer());
+                controller.navigate(R.id.action_navigation_search_to_l1Fragment, bundle);
+                break;
+            case 2:
+                quickAccessViewModel.l2Repo.updateCurrentPage(bookmark.getBookName(), bookmark.getPageNumer());
+                controller.navigate(R.id.action_navigation_search_to_l2Fragment, bundle);
+                break;
+            case 3:
+                quickAccessViewModel.l3Repo.updateCurrentPage(bookmark.getBookName(), bookmark.getPageNumer());
+                controller.navigate(R.id.action_navigation_search_to_l3Fragment, bundle);
+                break;
+
+        }
+
     }
 }

@@ -22,8 +22,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.book.R;
+import com.example.book.dao.bookmarks.Bookmarks;
+import com.example.book.dao.bookmarks.BookmarksViewModel;
 import com.example.book.dao.level1.pages.Level1_Pages;
 import com.example.book.dao.level2.pages.Level2_Pages;
 import com.example.book.ui.Level1.Books.L1Adapter;
@@ -46,6 +49,8 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener {
     boolean isBookmark;
     boolean isFromVerse = false;
     View view;
+    BookmarksViewModel bookmarksViewModel;
+    private int currentPageNumber;
 
 
     @Override
@@ -66,6 +71,7 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener {
     }
 
     private void viewModelCall() {
+        bookmarksViewModel = ViewModelProviders.of(this).get(BookmarksViewModel.class);
         viewModel = ViewModelProviders.of(this).get(L2ViewModel.class);
 
         if (!isFromVerse)
@@ -132,6 +138,7 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener {
     @Override
     public void onPageChange(int currentPage) {
         Log.d(TAG, "onPageChange: page updated");
+        currentPageNumber = currentPage;
         viewModel.updateCurrentPage(bookName, currentPage);
     }
 
@@ -139,17 +146,17 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener {
     public void itemChanged(Level2_Pages page) {
         currPage = page;
         Log.d(TAG, "itemChanged: ");
-        /**
-         *  if bookmarked => change to solid
-         *  else change to bordered icon
-         */
 
-        /*        if(isBookmark){
-            //menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark));
-            isBookmark=true;
-        }else{
-            isBookmark=false;
-        }*/
+        bookmarksViewModel.isBookmark(currPage.getBookName(), "", currPage.getChapterName(), currPage.getVerseName()).observe(getViewLifecycleOwner(), bookmarked -> {
+            Log.d(TAG, "isBookmark "+bookmarked);
+            if (bookmarked) {
+                menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark));
+                isBookmark = true;
+            } else {
+                menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark_border));
+                isBookmark = false;
+            }
+        });
 
 
     }
@@ -171,18 +178,24 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener {
             case R.id.bookmark:
                 Drawable myIcon = getResources().getDrawable(R.drawable.bookmark);
                 Drawable bookmark = menu.getItem(1).getIcon();
-                Log.d(TAG, "onOptionsItemSelected: " + bookmark.toString());
+                Bookmarks bkmk = new Bookmarks(
+                        "", currPage.getChapterName(), 2,currentPageNumber
+                        , currPage.getVerseName(), currPage.getBookName()
+                );
                 // un-bookmarking
                 if (isBookmark) {
                     // show popup to remove bookmark
                     //change icon
                     menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark_border));
                     // remove from db
-
+                    bookmarksViewModel.removeBookmark(bkmk);
+                    Toast.makeText(getActivity(), "Bookmark removed..", Toast.LENGTH_SHORT).show();
                 } else {
                     //change icon
                     menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark));
                     // add to db
+                    bookmarksViewModel.addBookmark(bkmk);
+                    Toast.makeText(getActivity(), "Bookmark added..", Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -190,9 +203,12 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener {
                 return true;
             case R.id.list:
                 NavController controller = Navigation.findNavController(view);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("title", bookName);
+
                 controller.navigate(R.id.action_l2Fragment_to_l2Chapters);
+                return true;
+                //todo
+            case R.id.tag:
+                Toast.makeText(getActivity(), "Under development", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

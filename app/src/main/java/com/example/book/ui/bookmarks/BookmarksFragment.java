@@ -1,35 +1,100 @@
 package com.example.book.ui.bookmarks;
 
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.book.R;
+import com.example.book.dao.bookmarks.Bookmarks;
+import com.example.book.ui.quick_access.QuickAccessViewModel;
 
-public class BookmarksFragment extends Fragment {
+import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
+import static android.widget.LinearLayout.HORIZONTAL;
+import static android.widget.LinearLayout.VERTICAL;
+
+public class BookmarksFragment extends Fragment implements BookmarksAdapter.ItemListener {
 
     private BookmarksViewModel bookmarksViewModel;
-
+    private List<Bookmarks> bookmarks;
+    SharedPreferences sharedpreferences;
+    View view;
+    BookmarksAdapter adapter;
+    RecyclerView rv;
+    SharedPreferences.Editor editor;
+    QuickAccessViewModel quickAccessViewModel;
+    private static final String TAG = "BookmarksFragment";
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+       viewModelCall();
+       view  = inflater.inflate(R.layout.fragment_bookmarks, container, false);
+       rv = view.findViewById(R.id.rv);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
+        itemDecor.setDrawable(getActivity().getResources().getDrawable( R.drawable.divider ));
+        rv.addItemDecoration(itemDecor);
+        adapter = new BookmarksAdapter(this);
+        rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rv.setAdapter(adapter);
+        return view;
+    }
+
+    private void viewModelCall() {
         bookmarksViewModel =
                 ViewModelProviders.of(this).get(BookmarksViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_bookmarks, container, false);
-        final TextView textView = root.findViewById(R.id.text_dashboard);
-        bookmarksViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
+
+        quickAccessViewModel =  ViewModelProviders.of(this).get(QuickAccessViewModel.class);
+
+        bookmarksViewModel.getAllBookmarks().observe(getViewLifecycleOwner(),bookmarks->{
+
+            adapter.setData(bookmarks);
+            this.bookmarks = bookmarks;
         });
-        return root;
+
+
+    }
+
+    @Override
+    public void itemClicked(Bookmarks bookmark,View v) {
+        NavController controller = Navigation.findNavController(v);
+        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
+                MODE_PRIVATE);
+        editor = sharedpreferences.edit();
+        editor.putString("bookName", bookmark.getBookName());
+        editor.apply();
+        Bundle bundle = new Bundle();
+        bundle.putString("title", bookmark.getBookName());
+        switch (bookmark.getLevel()){
+            case 1:
+                quickAccessViewModel.l1Repo.updateCurrentPage(bookmark.getBookName(),bookmark.getPageNumber());
+                controller.navigate(R.id.action_navigation_bookmarks_to_l1Fragment,bundle);
+                break;
+            case 2:
+                quickAccessViewModel.l2Repo.updateCurrentPage(bookmark.getBookName(),bookmark.getPageNumber());
+                controller.navigate(R.id.action_navigation_bookmarks_to_l2Fragment,bundle);
+                break;
+            case 3:
+                quickAccessViewModel.l3Repo.updateCurrentPage(bookmark.getBookName(),bookmark.getPageNumber());
+                controller.navigate(R.id.action_navigation_bookmarks_to_l3Fragment,bundle);
+                break;
+
+        }
     }
 }

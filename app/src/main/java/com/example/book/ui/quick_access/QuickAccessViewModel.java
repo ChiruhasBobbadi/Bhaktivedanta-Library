@@ -16,9 +16,9 @@ import java.util.List;
 
 public class QuickAccessViewModel extends AndroidViewModel {
     LookUpRepo lRepo;
-    L1Repo l1Repo;
-    L2Repo l2Repo;
-    L3Repo l3Repo;
+   public L1Repo l1Repo;
+    public  L2Repo l2Repo;
+    public L3Repo l3Repo;
 
     public QuickAccessViewModel(@NonNull Application application) {
         super(application);

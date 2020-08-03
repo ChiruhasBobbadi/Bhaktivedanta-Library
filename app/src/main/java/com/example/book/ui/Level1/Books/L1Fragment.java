@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -23,9 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.example.book.R;
+import com.example.book.dao.bookmarks.Bookmarks;
+import com.example.book.dao.bookmarks.BookmarksViewModel;
 import com.example.book.dao.level1.pages.Level1_Pages;
-
-import java.util.Arrays;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -35,14 +36,17 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
     L1Adapter adapter;
     SharedPreferences sharedpreferences;
     boolean _text, _syn, _trans, _purp;
+    boolean isBookmark;
+    boolean isFromChapter = false;
+    BookmarksViewModel bookmarks;
+    View view;
+
+    int current_page;
     private L1ViewModel viewModel;
     private String bookName;
     private Level1_Pages currPage;
     private int scrollTo = -1;
     private Menu menu;
-    boolean isBookmark;
-    boolean isFromChapter =false;
-    View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,30 +57,29 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
         checkIfFromChapter();
         getBookName();
 
-
-
-
         initRecyclerView();
 
-         viewModelCall();
+        viewModelCall();
 
 
         return root;
     }
 
     private void viewModelCall() {
+        bookmarks = ViewModelProviders.of(this).get(BookmarksViewModel.class);
+
         viewModel = ViewModelProviders.of(this).get(L1ViewModel.class);
 
-        if(!isFromChapter)
-        viewModel.getCurrentPage(bookName).observe(getViewLifecycleOwner(), integer -> {
+        if (!isFromChapter)
+            viewModel.getCurrentPage(bookName).observe(getViewLifecycleOwner(), integer -> {
 
-            if (scrollTo == -1) {
-                rv.scrollToPosition(integer - 1);
-                scrollTo = integer;
-            }
+                if (scrollTo == -1) {
+                    rv.scrollToPosition(integer - 1);
+                    scrollTo = integer;
+                }
 
-        });
-        else{
+            });
+        else {
             rv.scrollToPosition(scrollTo - 1);
         }
 
@@ -91,7 +94,7 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
         rv = view.findViewById(R.id.rv);
 
         rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        adapter = new L1Adapter(this,getActivity());
+        adapter = new L1Adapter(this, getActivity());
 
 
         SnapHelper snapHelper = new PagerSnapHelper();
@@ -100,12 +103,12 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
 
     private void checkIfFromChapter() {
 
-        if(  getArguments().getString("pageNumber")!=null && getArguments().containsKey("pageNumber") ){
+        if (getArguments().getString("pageNumber") != null && getArguments().containsKey("pageNumber")) {
             String t = getArguments().getString("pageNumber");
 
             String a[] = t.split("-");
 
-            if(a.length==2){
+            if (a.length == 2) {
                 isFromChapter = true;
                 scrollTo = Integer.parseInt(a[0]);
             }
@@ -127,28 +130,28 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
     }
 
 
-
-
     @Override
-    public void onPageChange(int currentPage) {
+    public void onPageChange( int currentPage) {
+
         viewModel.updateCurrentPage(bookName, currentPage);
+        current_page = currentPage;
     }
 
     @Override
     public void itemChanged(Level1_Pages page) {
         currPage = page;
         Log.d(TAG, "itemChanged: ");
-        /**
-         *  if bookmarked => change to solid
-         *  else change to bordered icon
-         */
 
-        /*        if(isBookmark){
-            //menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark));
-            isBookmark=true;
-        }else{
-            isBookmark=false;
-        }*/
+        bookmarks.isBookmark(currPage.getBookName(), "", currPage.getChapterName(), "").observe(getViewLifecycleOwner(), bookmarked -> {
+            Log.d(TAG, "isBookmark "+bookmarked);
+            if (bookmarked) {
+                menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark));
+                isBookmark = true;
+            } else {
+                menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark_border));
+                isBookmark = false;
+            }
+        });
 
 
     }
@@ -164,37 +167,45 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-
-
-
-        switch (item.getItemId()){
-            //todo
+        switch (item.getItemId()) {
             case R.id.bookmark:
-                Drawable myIcon = getResources().getDrawable( R.drawable.bookmark );
+
                 Drawable bookmark = menu.getItem(1).getIcon();
-                Log.d(TAG, "onOptionsItemSelected: "+bookmark.toString());
+                Log.d(TAG, "onOptionsItemSelected: " + bookmark.toString());
+
+                Bookmarks bkmk = new Bookmarks(
+                        "", currPage.getChapterName(), 1,
+                        current_page, "", currPage.getBookName()
+                );
+
                 // un-bookmarking
-                if(isBookmark){
+                if (isBookmark) {
                     // show popup to remove bookmark
                     //change icon
                     menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark_border));
                     // remove from db
-
-                }else{
+                    bookmarks.removeBookmark(bkmk);
+                    Toast.makeText(getActivity(), "Bookmark removed..", Toast.LENGTH_SHORT).show();
+                } else {
                     //change icon
                     menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark));
                     // add to db
+                    bookmarks.addBookmark(bkmk);
+                    Toast.makeText(getActivity(), "Bookmark added..", Toast.LENGTH_SHORT).show();
 
 
                 }
-                isBookmark=!isBookmark;
+                isBookmark = !isBookmark;
                 return true;
             case R.id.list:
                 NavController controller = Navigation.findNavController(view);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("title", bookName);
                 controller.navigate(R.id.action_l1Fragment_to_l1ChaptersFragment);
-               return true;
+                return true;
+
+                //todo
+            case R.id.tag:
+                Toast.makeText(getActivity(), "Under development", Toast.LENGTH_SHORT).show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

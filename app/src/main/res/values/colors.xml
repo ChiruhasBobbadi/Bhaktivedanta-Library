@@ -9,7 +9,9 @@
     <color name="bottom_nav_item_tint">#fafafa</color>
     <color name="bottom_nav_text_color">#6200EE</color>
     <color name="bottom_nav_selected_item">#3700B3</color>
-    <color name="bottom_nav_background">#212121</color>
+    <color name="bottom_nav_background">#636363</color>
+
+
 
     <color name="card_background">@color/white</color>
     <color name="black">#000</color>

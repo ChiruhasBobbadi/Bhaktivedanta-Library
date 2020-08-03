@@ -85,8 +85,7 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
     }
 
     public interface ItemListener {
-        void onPageChange(int currentPage);
-
+        void onPageChange(int current_page);
         void itemChanged(Level1_Pages page);
     }
 

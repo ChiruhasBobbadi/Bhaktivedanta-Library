@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -23,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.example.book.R;
+import com.example.book.dao.bookmarks.Bookmarks;
+import com.example.book.dao.bookmarks.BookmarksViewModel;
 import com.example.book.dao.level3.pages.Level3_Pages;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -45,6 +48,9 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
     private int scrollTo = -1;
     private Menu menu;
 
+    BookmarksViewModel bookmarksViewModel;
+    private int current_page;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,6 +69,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
     }
 
     private void viewModelCall() {
+        bookmarksViewModel = ViewModelProviders.of(this).get(BookmarksViewModel.class);
         viewModel = ViewModelProviders.of(this).get(L3ViewModel.class);
 
         if (!isFromVerse)
@@ -129,6 +136,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
 
     @Override
     public void onPageChange(int currentPage) {
+        current_page = currentPage;
         Log.d(TAG, "onPageChange: page updated");
         viewModel.updateCurrentPage(bookName, currentPage);
     }
@@ -137,18 +145,17 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
     public void itemChanged(Level3_Pages page) {
         currPage = page;
         Log.d(TAG, "itemChanged: ");
-        /**
-         *  if bookmarked => change to solid
-         *  else change to bordered icon
-         */
 
-        /*        if(isBookmark){
-            //menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark));
-            isBookmark=true;
-        }else{
-            isBookmark=false;
-        }*/
-
+        bookmarksViewModel.isBookmark(currPage.getBookName(), currPage.getLevel_3_Name(), currPage.getChapterName(), currPage.getVerseName()).observe(getViewLifecycleOwner(), bookmarked -> {
+            Log.d(TAG, "isBookmark "+bookmarked);
+            if (bookmarked) {
+                menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark));
+                isBookmark = true;
+            } else {
+                menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark_border));
+                isBookmark = false;
+            }
+        });
 
     }
 
@@ -167,20 +174,29 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
         switch (item.getItemId()) {
             //todo
             case R.id.bookmark:
-                Drawable myIcon = getResources().getDrawable(R.drawable.bookmark);
+
                 Drawable bookmark = menu.getItem(1).getIcon();
                 Log.d(TAG, "onOptionsItemSelected: " + bookmark.toString());
+
+                Bookmarks bkmk = new Bookmarks(
+                        currPage.getLevel_3_Name(), currPage.getChapterName(), 3,
+                        current_page, currPage.getVerseName(), currPage.getBookName()
+                );
+
                 // un-bookmarking
                 if (isBookmark) {
                     // show popup to remove bookmark
                     //change icon
                     menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark_border));
                     // remove from db
-
+                    bookmarksViewModel.removeBookmark(bkmk);
+                    Toast.makeText(getActivity(), "Bookmark removed..", Toast.LENGTH_SHORT).show();
                 } else {
                     //change icon
                     menu.getItem(1).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.bookmark));
                     // add to db
+                    bookmarksViewModel.addBookmark(bkmk);
+                    Toast.makeText(getActivity(), "Bookmark added..", Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -188,8 +204,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
                 return true;
             case R.id.list:
                 NavController controller = Navigation.findNavController(view);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("title", bookName);
+
                 controller.navigate(R.id.action_l3Fragment_to_l3Canto);
                 return true;
             default:

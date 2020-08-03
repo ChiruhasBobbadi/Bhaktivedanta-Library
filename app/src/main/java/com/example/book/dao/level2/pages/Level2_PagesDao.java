@@ -23,4 +23,7 @@ public interface Level2_PagesDao {
     @Query("select verseName from level2_pages where bookName=:book and chapterName=:chapter ORDER by verse")
     LiveData<List<String>> getVerses(String book, String chapter);
 
+    @Query("SELECT * FROM level2_pages WHERE purport LIKE '%' || :key || '%' ")
+    LiveData<List<Level2_Pages>> getMatchedL2Pages(String key);
+
 }

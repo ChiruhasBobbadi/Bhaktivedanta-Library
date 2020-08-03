@@ -51,7 +51,6 @@ public class BooksFragment extends Fragment implements GridAdapter.ItemListener 
 
 
 
-
         return root;
     }
 
@@ -76,4 +75,6 @@ public class BooksFragment extends Fragment implements GridAdapter.ItemListener 
             controller.navigate(R.id.action_navigation_books_to_l3Fragment,bundle);
 
     }
+
+
 }

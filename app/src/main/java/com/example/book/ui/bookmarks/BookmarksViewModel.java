@@ -1,19 +1,28 @@
 package com.example.book.ui.bookmarks;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class BookmarksViewModel extends ViewModel {
+import com.example.book.dao.bookmarks.Bookmarks;
+import com.example.book.database.BookMarksRepo;
 
-    private MutableLiveData<String> mText;
+import java.util.List;
 
-    public BookmarksViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is Bookmarks");
+public class BookmarksViewModel extends AndroidViewModel {
+
+    BookMarksRepo repo;
+
+    public BookmarksViewModel(@NonNull Application application) {
+        super(application);
+        repo = new BookMarksRepo(application);
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<List<Bookmarks>> getAllBookmarks(){
+        return repo.getAll();
     }
 }
