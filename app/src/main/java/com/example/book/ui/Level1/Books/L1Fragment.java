@@ -35,7 +35,7 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
     RecyclerView rv;
     L1Adapter adapter;
     SharedPreferences sharedpreferences;
-    boolean _text, _syn, _trans, _purp;
+    boolean _text, _syn, _trans, _purp,_textDefault, _textSmall, _textMedium, _textLarge;
     boolean isBookmark;
     boolean isFromChapter = false;
     BookmarksViewModel bookmarks;
@@ -85,7 +85,23 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
 
 
         viewModel.getPages(bookName).observe(getViewLifecycleOwner(), level1_pages -> {
-            adapter.setData(level1_pages, _text, _purp, _trans, _syn);
+
+
+            String res="";
+            if (_textDefault)
+              res="textDefault";
+
+            else if (_textSmall)
+                res="textSmall";
+            else if (_textMedium)
+                res="textMedium";
+            else if (_textLarge)
+                res="textLarge";
+
+            String temp = getArguments().getString("searchKey");
+
+
+            adapter.setData(level1_pages, _text, _purp, _trans, _syn,res,temp);
             rv.setAdapter(adapter);
         });
     }
@@ -126,7 +142,10 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
         _purp = sharedpreferences.getBoolean("purport", true);
         _trans = sharedpreferences.getBoolean("translation", true);
         _syn = sharedpreferences.getBoolean("synonyms", true);
-
+        _textDefault = sharedpreferences.getBoolean("textDefault", true);
+        _textSmall = sharedpreferences.getBoolean("textSmall", false);
+        _textMedium = sharedpreferences.getBoolean("textMedium", false);
+        _textLarge = sharedpreferences.getBoolean("textLarge", false);
     }
 
 
@@ -203,9 +222,9 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener {
                 return true;
 
                 //todo
-            case R.id.tag:
+            /*case R.id.tag:
                 Toast.makeText(getActivity(), "Under development", Toast.LENGTH_SHORT).show();
-                return true;
+                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -17,7 +17,7 @@ public interface Level1_PagesDao {
     @Query("select pageNumber from level1_pages where bookName=:book and chapterName=:chapter")
      LiveData<Integer> getPageNumberOfChapter(String book,String chapter);
 
-    @Query("SELECT * FROM level1_pages WHERE purport LIKE '%' || :key || '%' ")
+    @Query("SELECT * FROM level1_pages WHERE purport LIKE '%' || :key || '%' or translation like '%' || :key || '%' ")
     LiveData<List<Level1_Pages>> getMatchedL1Pages(String key);
 
 }

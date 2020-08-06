@@ -1,5 +1,8 @@
 package com.example.book.ui.Level2.books;
 
+import android.content.Context;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.book.R;
+import com.example.book.dao.level1.pages.Level1_Pages;
 import com.example.book.dao.level2.pages.Level2_Pages;
-
+import com.example.book.ui.Level1.Books.PurportAdapter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,16 +23,26 @@ class L2PurportAdapter extends RecyclerView.Adapter {
     private static final String TAG = "L2L2PurportAdapter";
     Level2_Pages page;
     List<String> purport;
+    String _font;
+    Context context;
     int currentPosition;
+    String searchKey;
     boolean _text, _synonyms, _translation, _purport;
 
-    public void setData(Level2_Pages data, boolean text, boolean syn, boolean pu, boolean trans) {
+    public void setData(Context con, Level2_Pages data, boolean text, boolean syn, boolean pu, boolean trans, String font,String search) {
         _text = text;
         _synonyms = syn;
         _purport = pu;
         _translation = trans;
         page = data;
-        String purp = page.getPurport().replace("¶", "¶\n");
+        _font = font;
+        context = con;
+        searchKey = search;
+
+        String purp="";
+        if(page.getPurport()!=null)
+            purp = page.getPurport().replace("¶", "\n");
+
         purport = Arrays.asList(purp.split("\\$"));
 
         notifyDataSetChanged();
@@ -52,6 +66,7 @@ class L2PurportAdapter extends RecyclerView.Adapter {
 
 
     }
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
@@ -59,8 +74,41 @@ class L2PurportAdapter extends RecyclerView.Adapter {
 
             L2PurportAdapter.ViewHolderRest rest = (L2PurportAdapter.ViewHolderRest) holder;
 
+            switch (_font) {
+                case "textDefault":
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    break;
+                case "textSmall":
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Small);
+                    rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Small);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Small);
+                    break;
+                case "textMedium":
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    break;
+                case "textLarge":
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
+                    break;
+                default:
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    break;
+            }
+
+            rest.text.setTextColor(context.getResources().getColor(R.color.text_color));
+            rest.synonyms.setTextColor(context.getResources().getColor(R.color.text_color));
+            rest.translation.setTextColor(context.getResources().getColor(R.color.text_color));
+
             if (_text && (page.getText() != null && page.getText().length() != 0))
                 rest.text.setText(page.getText());
+
             else
                 rest.text.setVisibility(View.GONE);
 
@@ -71,27 +119,97 @@ class L2PurportAdapter extends RecyclerView.Adapter {
                 rest.synonyms.setVisibility(View.GONE);
 
 
-            if (_translation && (page.getTranslation() != null && page.getTranslation().length() != 0))
-                rest.translation.setText(page.getTranslation());
+            if (_translation && (page.getTranslation() != null && page.getTranslation().length() != 0)){
+                if(searchKey!=null){
+                    String s = page.getTranslation();
+                    s =s.toLowerCase();
+                    searchKey = searchKey.toLowerCase().trim();
+                    int startIndex = s.indexOf(searchKey);
+                    if(startIndex==-1){
+                        rest.translation.setText(page.getTranslation().replace("¶", ""));
+                    }else{
+                        SpannableString str = new SpannableString(page.getTranslation());
+                        str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex+searchKey.length(), 0);
+                        rest.translation.setText(str);
+                    }
+
+                }else
+                    rest.translation.setText(page.getTranslation().replace("¶", ""));
+            }
             else
                 rest.translation.setVisibility(View.GONE);
 
 
         } else if (position % 2 != 0) {
             L2PurportAdapter.ViewHolderPurport purp = (L2PurportAdapter.ViewHolderPurport) holder;
+            switch (_font) {
+                case "textDefault":
+                    purp.purport.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    break;
+                case "textSmall":
+                    purp.purport.setTextAppearance(android.R.style.TextAppearance_Small);
+                    break;
+                case "textMedium":
+                    purp.purport.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    break;
+                case "textLarge":
+                    purp.purport.setTextAppearance(android.R.style.TextAppearance_Large);
+                    break;
+                default:
+                    purp.purport.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    break;
+            }
+            purp.purport.setTextColor(context.getResources().getColor(R.color.text_color));
+
+
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
-                String r = purport.get(position - 1).replace("¶", "¶\n");
-                purp.purport.setText(r);
+                String r = purport.get(position - 1).replace("¶", "\n");
+
+                if(searchKey!=null){
+                    String s = purport.get(position-1);
+                    s =s.toLowerCase();
+                    searchKey = searchKey.toLowerCase().trim();
+                    int startIndex = s.indexOf(searchKey);
+                    if(startIndex==-1)
+                        purp.purport.setText(r);
+                    else{
+                        SpannableString str = new SpannableString(s);
+                        str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex+searchKey.length(), 0);
+                        purp.purport.setText(str);
+                    }
+
+                }else
+                    purp.purport.setText(r);
+
             } else
                 purp.purport.setVisibility(View.GONE);
         } else {
             L2PurportAdapter.ViewHolderPoem poem = (L2PurportAdapter.ViewHolderPoem) holder;
+
+            switch (_font) {
+                case "textDefault":
+                    poem.poem.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    break;
+                case "textSmall":
+                    poem.poem.setTextAppearance(android.R.style.TextAppearance_Small);
+                    break;
+                case "textMedium":
+                    poem.poem.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    break;
+                case "textLarge":
+                    poem.poem.setTextAppearance(android.R.style.TextAppearance_Large);
+                    break;
+                default:
+                    poem.poem.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    break;
+            }
+            poem.poem.setTextColor(context.getResources().getColor(R.color.text_color));
+
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
                 poem.poem.setText(purport.get(position - 1));
             } else
                 poem.poem.setVisibility(View.GONE);
         }
-
 
     }
 

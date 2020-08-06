@@ -27,6 +27,6 @@ public interface Level3_PagesDao {
     LiveData<List<String>> getVerses(String book,String canto, String chapter);
 
 
-    @Query("SELECT * FROM level3_pages WHERE purport LIKE '%' || :key || '%' ")
+    @Query("SELECT * FROM level3_pages WHERE translation LIKE '%' || :key || '%' or  purport LIKE '%' || :key || '%' ")
     LiveData<List<Level3_Pages>> getMatchedL3Pages(String key);
 }

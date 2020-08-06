@@ -47,7 +47,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
     SharedPreferences sharedpreferences;
     private Menu menu;
     private RecyclerView rv;
-
+    private String searchKey;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +77,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         inflater.inflate(R.menu.search, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) item.getActionView();
+        searchView.setIconified(false);
         searchView.setMaxWidth(Integer.MAX_VALUE);
         int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
         View searchPlate = searchView.findViewById(searchPlateId);
@@ -91,7 +92,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
                 searchResults.clear();
                 adapter.setData(searchResults);
 
-                Log.d(TAG, "onQueryTextChange: " + s);
+                searchKey = s;
                 if (s.trim().startsWith("#"))
                     tagSearch(s.toLowerCase());
                 else if (s.equals("")) {
@@ -166,9 +167,12 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
                 MODE_PRIVATE);
         editor = sharedpreferences.edit();
         editor.putString("bookName", bookmark.getBookName());
+
+        Log.d(TAG, "itemClicked: "+searchKey);
         editor.apply();
         Bundle bundle = new Bundle();
         bundle.putString("title", bookmark.getBookName());
+        bundle.putString("searchKey",searchKey);
         switch (bookmark.getLevel()) {
             case 1:
                 quickAccessViewModel.l1Repo.updateCurrentPage(bookmark.getBookName(), bookmark.getPageNumer());

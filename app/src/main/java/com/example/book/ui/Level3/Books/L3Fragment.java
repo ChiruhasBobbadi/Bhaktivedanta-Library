@@ -38,7 +38,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
     RecyclerView rv;
     L3Adapter adapter;
     SharedPreferences sharedpreferences;
-    boolean _text, _syn, _trans, _purp;
+    boolean _text, _syn, _trans, _purp,_textDefault, _textSmall, _textMedium, _textLarge;
     boolean isBookmark;
     boolean isFromVerse = false;
     View view;
@@ -88,7 +88,19 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
 
 
         viewModel.getPages(bookName).observe(getViewLifecycleOwner(), level3_pages -> {
-            adapter.setData(level3_pages, _text, _purp, _trans, _syn);
+            String res="";
+            if (_textDefault)
+                res="textDefault";
+
+            else if (_textSmall)
+                res="textSmall";
+            else if (_textMedium)
+                res="textMedium";
+            else if (_textLarge)
+                res="textLarge";
+            String temp = getArguments().getString("searchKey");
+
+            adapter.setData(level3_pages, _text, _purp, _trans, _syn,res,temp);
             rv.setAdapter(adapter);
         });
     }
@@ -130,7 +142,10 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
         _purp = sharedpreferences.getBoolean("purport", true);
         _trans = sharedpreferences.getBoolean("translation", true);
         _syn = sharedpreferences.getBoolean("synonyms", true);
-
+        _textDefault = sharedpreferences.getBoolean("textDefault", true);
+        _textSmall = sharedpreferences.getBoolean("textSmall", false);
+        _textMedium = sharedpreferences.getBoolean("textMedium", false);
+        _textLarge = sharedpreferences.getBoolean("textLarge", false);
     }
 
 

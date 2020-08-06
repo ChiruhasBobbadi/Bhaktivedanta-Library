@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.book.R;
-import com.example.book.dao.level2.pages.Level2_Pages;
 import com.example.book.dao.level3.pages.Level3_Pages;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +23,10 @@ class L3Adapter extends RecyclerView.Adapter<L3Adapter.ViewHolder> {
     private static final String TAG = "L2Adapter";
     boolean _text, _synonyms, _translation, _purport;
     Context context;
+    String _font;
     private L3Adapter.ItemListener myListener;
     private List<Level3_Pages> l3Pages;
-
+    private String search;
     public L3Adapter(L3Adapter.ItemListener listener, Context con) {
         myListener = listener;
         context = con;
@@ -49,16 +48,18 @@ class L3Adapter extends RecyclerView.Adapter<L3Adapter.ViewHolder> {
         v.vibrate(20);
 
         Level3_Pages page = l3Pages.get(position);
-
-        holder.text.setText(page.getVerse()+". "+page.getVerseName());
+        holder.text.setText(page.getVerse() + ". " + page.getVerseName());
         holder.setData(page);
     }
-    public void setData(List<Level3_Pages> pages, boolean text, boolean purport, boolean trans, boolean syn) {
+
+    public void setData(List<Level3_Pages> pages, boolean text, boolean purport, boolean trans, boolean syn, String font,String s) {
         l3Pages = pages;
         _text = text;
         _purport = purport;
         _translation = trans;
         _synonyms = syn;
+        _font = font;
+        search =s;
         notifyDataSetChanged();
     }
 
@@ -100,7 +101,7 @@ class L3Adapter extends RecyclerView.Adapter<L3Adapter.ViewHolder> {
         public void setData(Level3_Pages page) {
 
 
-            adapter.setData(page, _text, _synonyms, _purport, _translation);
+            adapter.setData(context, page, _text, _synonyms, _purport, _translation, _font,search);
             rv.setAdapter(adapter);
         }
 

@@ -25,13 +25,15 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
 
     boolean _text, _synonyms, _translation, _purport;
     Context context;
+    String _font;
     private L1Adapter.ItemListener myListener;
     private List<Level1_Pages> l1Pages;
-
+    private String searchKey;
     public L1Adapter(L1Adapter.ItemListener listener, Context con) {
         myListener = listener;
         context = con;
         l1Pages = new ArrayList<>();
+
     }
 
     public void setListener(L1Adapter.ItemListener listener) {
@@ -66,12 +68,15 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
     }
 
 
-    public void setData(List<Level1_Pages> pages, boolean text, boolean purport, boolean trans, boolean syn) {
+    public void setData(List<Level1_Pages> pages, boolean text, boolean purport, boolean trans, boolean syn,String font,String search) {
         l1Pages = pages;
         _text = text;
         _purport = purport;
         _translation = trans;
         _synonyms = syn;
+        _font=font;
+        searchKey = search;
+        Log.d(TAG, "setData: "+searchKey);
         notifyDataSetChanged();
     }
 
@@ -107,7 +112,7 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
         public void setData(Level1_Pages page) {
 
 
-            adapter.setData(page, _text, _synonyms, _purport, _translation);
+            adapter.setData(context,page, _text, _synonyms, _purport, _translation,_font,searchKey);
             rv.setAdapter(adapter);
         }
 

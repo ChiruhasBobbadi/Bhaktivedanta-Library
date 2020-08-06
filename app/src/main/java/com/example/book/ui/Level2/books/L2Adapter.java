@@ -23,9 +23,10 @@ class L2Adapter extends RecyclerView.Adapter<L2Adapter.ViewHolder> {
     private static final String TAG = "L2Adapter";
     boolean _text, _synonyms, _translation, _purport;
     Context context;
+    String _font;
     private L2Adapter.ItemListener myListener;
     private List<Level2_Pages> l2Pages;
-
+    private String searchTerm;
 
     public L2Adapter(L2Adapter.ItemListener listener, Context con) {
         myListener = listener;
@@ -50,8 +51,8 @@ class L2Adapter extends RecyclerView.Adapter<L2Adapter.ViewHolder> {
         Level2_Pages page = l2Pages.get(position);
 
         holder.text.setText(page.getVerseName()+"");
-
         holder.setData(page);
+
     }
 
     @Override
@@ -59,12 +60,14 @@ class L2Adapter extends RecyclerView.Adapter<L2Adapter.ViewHolder> {
         return l2Pages.size();
     }
 
-    public void setData(List<Level2_Pages> pages, boolean text, boolean purport, boolean trans, boolean syn) {
+    public void setData(List<Level2_Pages> pages, boolean text, boolean purport, boolean trans, boolean syn,String font,String search) {
         l2Pages = pages;
         _text = text;
         _purport = purport;
         _translation = trans;
         _synonyms = syn;
+        _font=font;
+        searchTerm = search;
         notifyDataSetChanged();
     }
 
@@ -101,8 +104,7 @@ class L2Adapter extends RecyclerView.Adapter<L2Adapter.ViewHolder> {
 
         public void setData(Level2_Pages page) {
 
-
-            adapter.setData(page, _text, _synonyms, _purport, _translation);
+            adapter.setData(context,page, _text, _synonyms, _purport, _translation,_font,searchTerm);
             rv.setAdapter(adapter);
         }
 

@@ -126,4 +126,21 @@ public class Level2_Pages {
         this.translation = translation;
         this.verseName = verseName;
     }
+
+    @Override
+    public String toString() {
+        return "Level2_Pages{" +
+                "id=" + id +
+                ", chapter=" + chapter +
+                ", pageNumber=" + pageNumber +
+                ", bookName='" + bookName + '\'' +
+                ", verse=" + verse +
+                ", chapterName='" + chapterName + '\'' +
+                ", purport='" + purport + '\'' +
+                ", synonyms='" + synonyms + '\'' +
+                ", text='" + text + '\'' +
+                ", translation='" + translation + '\'' +
+                ", verseName='" + verseName + '\'' +
+                '}';
+    }
 }
