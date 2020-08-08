@@ -31,7 +31,7 @@ import com.example.book.dao.tags.TagsDao;
                 Level2_Books.class, Level2_Pages.class,
                 Level3_Books.class, Level3_Pages.class,
                 Bookmarks.class, Tags.class
-        }, version = 6)
+        }, version = 1)
 public abstract class Database extends RoomDatabase {
 
     private static Database instance;

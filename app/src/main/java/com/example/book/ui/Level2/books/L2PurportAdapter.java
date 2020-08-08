@@ -1,6 +1,7 @@
 package com.example.book.ui.Level2.books;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
@@ -76,9 +77,9 @@ class L2PurportAdapter extends RecyclerView.Adapter {
 
             switch (_font) {
                 case "textDefault":
-                    rest.text.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
-                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
                 case "textSmall":
                     rest.text.setTextAppearance(android.R.style.TextAppearance_Small);
@@ -96,16 +97,16 @@ class L2PurportAdapter extends RecyclerView.Adapter {
                     rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
                 default:
-                    rest.text.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
-                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
             }
 
             rest.text.setTextColor(context.getResources().getColor(R.color.text_color));
             rest.synonyms.setTextColor(context.getResources().getColor(R.color.text_color));
             rest.translation.setTextColor(context.getResources().getColor(R.color.text_color));
-
+            rest.translation.setTypeface(Typeface.DEFAULT_BOLD);
             if (_text && (page.getText() != null && page.getText().length() != 0))
                 rest.text.setText(page.getText());
 
@@ -164,7 +165,8 @@ class L2PurportAdapter extends RecyclerView.Adapter {
 
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
                 String r = purport.get(position - 1).replace("¶", "\n");
-
+                r = r.trim();
+                r ="\n"+r+"\n";
                 if(searchKey!=null){
                     String s = purport.get(position-1);
                     s =s.toLowerCase();
@@ -173,7 +175,7 @@ class L2PurportAdapter extends RecyclerView.Adapter {
                     if(startIndex==-1)
                         purp.purport.setText(r);
                     else{
-                        SpannableString str = new SpannableString(s);
+                        SpannableString str = new SpannableString(r);
                         str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex+searchKey.length(), 0);
                         purp.purport.setText(str);
                     }
@@ -206,7 +208,8 @@ class L2PurportAdapter extends RecyclerView.Adapter {
             poem.poem.setTextColor(context.getResources().getColor(R.color.text_color));
 
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
-                poem.poem.setText(purport.get(position - 1));
+                String r =purport.get(position - 1);
+                poem.poem.setText(r);
             } else
                 poem.poem.setVisibility(View.GONE);
         }

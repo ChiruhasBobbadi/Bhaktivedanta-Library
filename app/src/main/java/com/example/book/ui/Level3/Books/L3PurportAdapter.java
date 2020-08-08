@@ -1,6 +1,7 @@
 package com.example.book.ui.Level3.Books;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
@@ -72,9 +73,9 @@ class L3PurportAdapter extends RecyclerView.Adapter {
 
             switch (_font) {
                 case "textDefault":
-                    rest.text.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
-                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
                 case "textSmall":
                     rest.text.setTextAppearance(android.R.style.TextAppearance_Small);
@@ -92,16 +93,16 @@ class L3PurportAdapter extends RecyclerView.Adapter {
                     rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
                 default:
-                    rest.text.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
-                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
             }
 
             rest.text.setTextColor(context.getResources().getColor(R.color.text_color));
             rest.synonyms.setTextColor(context.getResources().getColor(R.color.text_color));
             rest.translation.setTextColor(context.getResources().getColor(R.color.text_color));
-
+            rest.translation.setTypeface(Typeface.DEFAULT_BOLD);
             if (_text && (page.getText() != null && page.getText().length() != 0))
                 rest.text.setText(page.getText());
 
@@ -110,7 +111,7 @@ class L3PurportAdapter extends RecyclerView.Adapter {
 
 
             if (_synonyms && (page.getSynonyms() != null && page.getSynonyms().length() != 0))
-                rest.synonyms.setText(page.getSynonyms());
+                rest.synonyms.setText(page.getSynonyms().replace("¶", ""));
             else
                 rest.synonyms.setVisibility(View.GONE);
 
@@ -168,7 +169,7 @@ class L3PurportAdapter extends RecyclerView.Adapter {
                     if(startIndex==-1)
                         purp.purport.setText(r);
                     else{
-                        SpannableString str = new SpannableString(s);
+                        SpannableString str = new SpannableString(r);
                         str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex+searchKey.length(), 0);
                         purp.purport.setText(str);
                     }

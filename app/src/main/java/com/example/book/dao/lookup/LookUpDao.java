@@ -12,10 +12,10 @@ import java.util.List;
 public interface LookUpDao {
 
 
-    @Query("SELECT * FROM lookup")
+    @Query("SELECT * FROM lookup order by bookName")
     LiveData<List<LookupTable>> getAll();
 
-    @Query("SELECT bookName FROM lookup")
+    @Query("SELECT bookName FROM lookup order by bookName")
     LiveData<List<String>> getBooks();
 
     @Query("SELECT level from lookup where bookName=:book")

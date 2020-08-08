@@ -1,7 +1,7 @@
 package com.example.book.ui.Level1.Books;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.book.R;
 import com.example.book.dao.level1.pages.Level1_Pages;
+import com.example.book.helper.StringHelper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -75,9 +76,9 @@ public class PurportAdapter extends RecyclerView.Adapter {
 
             switch (_font) {
                 case "textDefault":
-                    rest.text.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
-                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
                 case "textSmall":
                     rest.text.setTextAppearance(android.R.style.TextAppearance_Small);
@@ -95,18 +96,18 @@ public class PurportAdapter extends RecyclerView.Adapter {
                     rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
                 default:
-                    rest.text.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.text.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
-                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
             }
 
             rest.text.setTextColor(context.getResources().getColor(R.color.text_color));
             rest.synonyms.setTextColor(context.getResources().getColor(R.color.text_color));
             rest.translation.setTextColor(context.getResources().getColor(R.color.text_color));
+            rest.translation.setTypeface(Typeface.DEFAULT_BOLD);
 
             if (_text && (page.getText() != null && page.getText().length() != 0))
-
                 rest.text.setText(page.getText());
 
 
@@ -115,33 +116,34 @@ public class PurportAdapter extends RecyclerView.Adapter {
 
 
             if (_synonyms && (page.getSynonyms() != null && page.getSynonyms().length() != 0))
-                rest.synonyms.setText(page.getSynonyms());
+                rest.synonyms.setText(page.getSynonyms().replace("¶", ""));
             else
                 rest.synonyms.setVisibility(View.GONE);
 
 
-            if (_translation && (page.getTranslation() != null && page.getTranslation().length() != 0)){
-                if(searchKey!=null){
+            if (_translation && (page.getTranslation() != null && page.getTranslation().length() != 0))
+            {
+                if (searchKey != null) {
                     String s = page.getTranslation();
-                    s =s.toLowerCase();
+                    s = s.toLowerCase();
                     searchKey = searchKey.toLowerCase().trim();
                     int startIndex = s.indexOf(searchKey);
-                   if(startIndex==-1){
-                       rest.translation.setText(page.getTranslation().replace("¶", ""));
-                   }else{
-                       SpannableString str = new SpannableString(page.getTranslation());
-                       str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex+searchKey.length(), 0);
-                       rest.translation.setText(str);
-                   }
+                    if (startIndex == -1) {
+                        rest.translation.setText(page.getTranslation().replace("¶", ""));
+                    } else {
+                        SpannableString str = new SpannableString(page.getTranslation());
+                        str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex + searchKey.length(), 0);
+                        rest.translation.setText(str);
+                    }
 
-                }else
+                } else
                     rest.translation.setText(page.getTranslation().replace("¶", ""));
-            }
-            else
+            } else
                 rest.translation.setVisibility(View.GONE);
 
 
-        } else if (position % 2 != 0) {
+        }
+        else if (position % 2 != 0) {
             ViewHolderPurport purp = (ViewHolderPurport) holder;
             switch (_font) {
                 case "textDefault":
@@ -165,26 +167,26 @@ public class PurportAdapter extends RecyclerView.Adapter {
 
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
                 String r = purport.get(position - 1).replace("¶", "\n");
-
-                if(searchKey!=null){
-                    String s = purport.get(position-1);
-                    s =s.toLowerCase();
+                if (searchKey != null) {
+                    String s = purport.get(position - 1);
+                    s = s.toLowerCase();
                     searchKey = searchKey.toLowerCase().trim();
                     int startIndex = s.indexOf(searchKey);
-                    if(startIndex==-1)
+                    if (startIndex == -1)
                         purp.purport.setText(r);
-                    else{
-                        SpannableString str = new SpannableString(s);
-                        str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex+searchKey.length(), 0);
+                    else {
+                        SpannableString str = new SpannableString(r);
+                        str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex + searchKey.length(), 0);
                         purp.purport.setText(str);
                     }
 
-                }else
+                } else
                     purp.purport.setText(r);
 
             } else
                 purp.purport.setVisibility(View.GONE);
-        } else {
+        }
+        else {
             ViewHolderPoem poem = (ViewHolderPoem) holder;
 
             switch (_font) {
@@ -205,9 +207,12 @@ public class PurportAdapter extends RecyclerView.Adapter {
                     break;
             }
             poem.poem.setTextColor(context.getResources().getColor(R.color.text_color));
-
+            poem.poem.setTypeface(null,Typeface.ITALIC);
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
-                poem.poem.setText(purport.get(position - 1));
+
+                String t = purport.get(position - 1).trim();
+                Log.d(TAG, "onBindViewHolder: "+t);
+                poem.poem.setText(t);
             } else
                 poem.poem.setVisibility(View.GONE);
         }

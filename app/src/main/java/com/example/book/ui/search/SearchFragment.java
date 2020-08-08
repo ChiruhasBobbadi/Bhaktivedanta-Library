@@ -78,6 +78,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         MenuItem item = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setIconified(false);
+        searchView.setQueryHint("Search for words or Tags");
         searchView.setMaxWidth(Integer.MAX_VALUE);
         int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
         View searchPlate = searchView.findViewById(searchPlateId);
