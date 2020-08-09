@@ -67,6 +67,9 @@ public class L2Repo {
     public LiveData<List<Level2_Pages>> getMatchedL2Pages(String key){
         return l2PDao.getMatchedL2Pages(key);
     }
+    public LiveData<List<Level2_Pages>> getNavVerses(String book, String chapter){
+        return l2PDao.getNavVerses(book,chapter);
+    }
 
 
 }

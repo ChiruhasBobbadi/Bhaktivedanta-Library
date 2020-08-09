@@ -6,16 +6,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.book.Model.LastLevelModel;
 import com.example.book.R;
-import com.example.book.ui.Level2.Verse.L2VerseViewModel;
+import com.example.book.helper.Chapteradapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class L3VerseFragment extends Fragment {
     ListView listView;
     View v;
     String chapter;
+    List<LastLevelModel> model;
     private static final String TAG = "L3VerseFragment";
     String canto;
     public L3VerseFragment() {
@@ -54,7 +56,9 @@ public class L3VerseFragment extends Fragment {
     private void listItemClick() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
 
-            String verse = verses.get(position).split("\\.",2)[1].trim();
+            String verse = model.get(position).getLastLevelName().split("\\.",2)[1].trim();
+
+            Log.d(TAG, "listItemClick: "+verse);
             v = view;
             Log.d(TAG, "listItemClick: "+verse);
 
@@ -79,17 +83,16 @@ public class L3VerseFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(L3VerseViewModel.class);
 
         chapter = getArguments().getString("chapter").trim();
+        Log.d(TAG, "viewModelCalls: "+chapter);
         canto = getArguments().getString("canto").trim();
-        viewModel.getVerses(bookName,canto, chapter).observe(getViewLifecycleOwner(), strings -> {
+        viewModel.getNavVerses(bookName,canto,chapter).observe(getViewLifecycleOwner(), strings -> {
 
-                List<String> list = new ArrayList<>();
+            model = new ArrayList<>();
+            for (int i = 0; i < strings.size(); i++)
+                model.add(new LastLevelModel((i + 1) + ". " + strings.get(i).getVerseName(), strings.get(i).getTranslation().replace("¶", "")));
 
-                for (int i = 0; i < strings.size(); i++) {
-                    list.add(i, ((i+1)+". "+strings.get(i)));
-                }
 
-            verses =list;
-            createListView(list);
+            createListView();
 
         });
     }
@@ -101,8 +104,8 @@ public class L3VerseFragment extends Fragment {
         bookName = sharedpreferences.getString("bookName", "");
     }
 
-    public void createListView(List<String> list) {
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.chapter_view, list);
-        listView.setAdapter(arrayAdapter);
+    public void createListView() {
+        Chapteradapter chapteradapter = new Chapteradapter(getActivity(), model);
+        listView.setAdapter(chapteradapter);
     }
 }

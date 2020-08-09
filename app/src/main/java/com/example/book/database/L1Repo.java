@@ -57,7 +57,7 @@ public class L1Repo implements Level1_BooksDao, Level1_PagesDao {
     }
 
 
-    public LiveData<List<String>> getChapters(String book) {
+    public LiveData<List<Level1_Pages>> getChapters(String book) {
         return l1PDao.getChapters(book);
     }
 
@@ -66,4 +66,8 @@ public class L1Repo implements Level1_BooksDao, Level1_PagesDao {
         return l1PDao.getMatchedL1Pages(key);
     }
 
+
+   public LiveData<List<String>> getChapterNames(String book){
+        return l1PDao.getChapterNames(book);
+    }
 }

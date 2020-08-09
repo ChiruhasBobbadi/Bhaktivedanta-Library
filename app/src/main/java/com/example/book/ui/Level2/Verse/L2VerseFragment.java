@@ -6,16 +6,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.book.Model.LastLevelModel;
 import com.example.book.R;
+import com.example.book.helper.Chapteradapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -31,7 +34,7 @@ public class L2VerseFragment extends Fragment {
     ListView listView;
     View v;
     String chapter;
-
+    List<LastLevelModel> model;
     public L2VerseFragment() {
         // Required empty public constructor
     }
@@ -51,7 +54,7 @@ public class L2VerseFragment extends Fragment {
 
     private void listItemClick() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            String verse = verses.get(position).split("\\.")[1].trim();
+            String verse = model.get(position).getLastLevelName().split("\\.",2)[1].trim();
             v = view;
 
 
@@ -74,27 +77,21 @@ public class L2VerseFragment extends Fragment {
     private void viewModelCalls() {
         viewModel = ViewModelProviders.of(this).get(L2VerseViewModel.class);
 
-        chapter = getArguments().getString("chapter");
+        chapter = getArguments().getString("chapter").trim();
         Log.d(TAG, "viewModelCalls: "+chapter);
 
-        viewModel.getVerses(bookName, chapter.trim()).observe(getViewLifecycleOwner(), strings -> {
+        viewModel.getNavVerses(bookName,chapter).observe(getViewLifecycleOwner(), strings -> {
 
-            Log.d(TAG, "viewModelCalls: " + strings.size());
-            verses = strings;
+            model = new ArrayList<>();
+            for (int i = 0; i < strings.size(); i++)
+                model.add(new LastLevelModel((i + 1) + ". " + strings.get(i).getVerseName(), strings.get(i).getTranslation().replace("¶", "")));
 
-            //todo
-            if (verses.get(0) == null) {
-                for (int i = 0; i < verses.size(); i++) {
-                    verses.add(i, (i + 1) + "");
-                }
-            } else {
-                for (int i = 0; i < verses.size(); i++) {
-                    verses.set(i, (i + 1) + ". " + verses.get(i));
-                }
-            }
-            createListView(verses);
+
+            createListView();
 
         });
+
+
     }
 
     private void init() {
@@ -104,8 +101,8 @@ public class L2VerseFragment extends Fragment {
         bookName = sharedpreferences.getString("bookName", "");
     }
 
-    public void createListView(List<String> list) {
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.chapter_view, list);
-        listView.setAdapter(arrayAdapter);
+    public void createListView() {
+        Chapteradapter chapteradapter = new Chapteradapter(getActivity(), model);
+        listView.setAdapter(chapteradapter);
     }
 }

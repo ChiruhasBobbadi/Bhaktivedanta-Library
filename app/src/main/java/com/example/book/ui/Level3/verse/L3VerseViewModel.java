@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.book.dao.level3.pages.Level3_Pages;
 import com.example.book.database.L2Repo;
 import com.example.book.database.L3Repo;
 
@@ -29,5 +30,8 @@ public class L3VerseViewModel extends AndroidViewModel {
 
     public LiveData<Integer> getPageNumberOfVerse(String book,String canto, String chapter,String verse) {
         return repo.getPageNumberOfVerse(book,canto,chapter,verse);
+    }
+    public LiveData<List<Level3_Pages>> getNavVerses(String book, String canto, String chapter){
+        return repo.getNavVerses(book,canto,chapter);
     }
 }

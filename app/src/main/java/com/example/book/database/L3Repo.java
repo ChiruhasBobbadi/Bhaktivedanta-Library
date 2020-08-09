@@ -78,4 +78,9 @@ public class L3Repo {
         return l3PDao.getMatchedL3Pages(key);
     }
 
+    public LiveData<List<Level3_Pages>> getNavVerses(String book,String canto, String chapter){
+        Log.d(TAG, "book: "+book+" canto: "+canto+" chapter: "+chapter);
+        return l3PDao.getNavVerses(book,canto,chapter);
+    }
+
 }

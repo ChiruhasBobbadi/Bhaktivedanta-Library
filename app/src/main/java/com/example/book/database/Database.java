@@ -61,7 +61,5 @@ public abstract class Database extends RoomDatabase {
 
     public abstract Level3_PagesDao level3_pagesDao();
 
-    public abstract BookmarksDao bookmarksDao();
 
-    public abstract TagsDao tagsDao();
 }

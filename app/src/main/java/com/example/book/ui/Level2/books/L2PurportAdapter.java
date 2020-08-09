@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,24 +14,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.book.R;
-import com.example.book.dao.level1.pages.Level1_Pages;
 import com.example.book.dao.level2.pages.Level2_Pages;
-import com.example.book.ui.Level1.Books.PurportAdapter;
 
 import java.util.Arrays;
 import java.util.List;
 
-class L2PurportAdapter extends RecyclerView.Adapter {
-    private static final String TAG = "L2L2PurportAdapter";
+public class L2PurportAdapter extends RecyclerView.Adapter {
+
+    private static final String TAG = "PurportAdapter";
     Level2_Pages page;
     List<String> purport;
     String _font;
     Context context;
     int currentPosition;
-    String searchKey;
     boolean _text, _synonyms, _translation, _purport;
+    String searchKey;
 
-    public void setData(Context con, Level2_Pages data, boolean text, boolean syn, boolean pu, boolean trans, String font,String search) {
+    public void setData(Context con, Level2_Pages data, boolean text, boolean syn, boolean pu, boolean trans, String font, String s) {
         _text = text;
         _synonyms = syn;
         _purport = pu;
@@ -38,16 +38,17 @@ class L2PurportAdapter extends RecyclerView.Adapter {
         page = data;
         _font = font;
         context = con;
-        searchKey = search;
+        searchKey = s;
 
-        String purp="";
-        if(page.getPurport()!=null)
+        String purp = "";
+        if (page.getPurport() != null)
             purp = page.getPurport().replace("¶", "\n");
 
         purport = Arrays.asList(purp.split("\\$"));
 
         notifyDataSetChanged();
     }
+
 
     @NonNull
     @Override
@@ -56,24 +57,25 @@ class L2PurportAdapter extends RecyclerView.Adapter {
         View view;
         if (viewType == 0) {
             view = inflater.inflate(R.layout.page, parent, false);
-            return new L2PurportAdapter.ViewHolderRest(view);
+            return new ViewHolderRest(view);
         } else if (viewType == 1) {
             view = inflater.inflate(R.layout.purport, parent, false);
-            return new L2PurportAdapter.ViewHolderPurport(view);
+            return new ViewHolderPurport(view);
         } else {
             view = inflater.inflate(R.layout.poem, parent, false);
-            return new L2PurportAdapter.ViewHolderPoem(view);
+            return new ViewHolderPoem(view);
         }
 
 
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         if (position == 0) {
 
-            L2PurportAdapter.ViewHolderRest rest = (L2PurportAdapter.ViewHolderRest) holder;
+            ViewHolderRest rest = (ViewHolderRest) holder;
 
             switch (_font) {
                 case "textDefault":
@@ -107,42 +109,43 @@ class L2PurportAdapter extends RecyclerView.Adapter {
             rest.synonyms.setTextColor(context.getResources().getColor(R.color.text_color));
             rest.translation.setTextColor(context.getResources().getColor(R.color.text_color));
             rest.translation.setTypeface(Typeface.DEFAULT_BOLD);
+
             if (_text && (page.getText() != null && page.getText().length() != 0))
                 rest.text.setText(page.getText());
+
 
             else
                 rest.text.setVisibility(View.GONE);
 
 
             if (_synonyms && (page.getSynonyms() != null && page.getSynonyms().length() != 0))
-                rest.synonyms.setText(page.getSynonyms());
+                rest.synonyms.setText(page.getSynonyms().replace("¶", ""));
             else
                 rest.synonyms.setVisibility(View.GONE);
 
 
-            if (_translation && (page.getTranslation() != null && page.getTranslation().length() != 0)){
-                if(searchKey!=null){
+            if (_translation && (page.getTranslation() != null && page.getTranslation().length() != 0)) {
+                if (searchKey != null) {
                     String s = page.getTranslation();
-                    s =s.toLowerCase();
+                    s = s.toLowerCase();
                     searchKey = searchKey.toLowerCase().trim();
                     int startIndex = s.indexOf(searchKey);
-                    if(startIndex==-1){
+                    if (startIndex == -1) {
                         rest.translation.setText(page.getTranslation().replace("¶", ""));
-                    }else{
-                        SpannableString str = new SpannableString(page.getTranslation());
-                        str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex+searchKey.length(), 0);
+                    } else {
+                        SpannableString str = new SpannableString(page.getTranslation()+"\n");
+                        str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex + searchKey.length(), 0);
                         rest.translation.setText(str);
                     }
 
-                }else
-                    rest.translation.setText(page.getTranslation().replace("¶", ""));
-            }
-            else
+                } else
+                    rest.translation.setText(page.getTranslation().replace("¶", "")+"\n");
+            } else
                 rest.translation.setVisibility(View.GONE);
 
 
         } else if (position % 2 != 0) {
-            L2PurportAdapter.ViewHolderPurport purp = (L2PurportAdapter.ViewHolderPurport) holder;
+            ViewHolderPurport purp = (ViewHolderPurport) holder;
             switch (_font) {
                 case "textDefault":
                     purp.purport.setTextAppearance(android.R.style.TextAppearance_Medium);
@@ -165,28 +168,26 @@ class L2PurportAdapter extends RecyclerView.Adapter {
 
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
                 String r = purport.get(position - 1).replace("¶", "\n");
-                r = r.trim();
-                r ="\n"+r+"\n";
-                if(searchKey!=null){
-                    String s = purport.get(position-1);
-                    s =s.toLowerCase();
+                if (searchKey != null) {
+                    String s = purport.get(position - 1);
+                    s = s.toLowerCase();
                     searchKey = searchKey.toLowerCase().trim();
                     int startIndex = s.indexOf(searchKey);
-                    if(startIndex==-1)
+                    if (startIndex == -1)
                         purp.purport.setText(r);
-                    else{
+                    else {
                         SpannableString str = new SpannableString(r);
-                        str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex+searchKey.length(), 0);
+                        str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex + searchKey.length(), 0);
                         purp.purport.setText(str);
                     }
 
-                }else
+                } else
                     purp.purport.setText(r);
 
             } else
                 purp.purport.setVisibility(View.GONE);
         } else {
-            L2PurportAdapter.ViewHolderPoem poem = (L2PurportAdapter.ViewHolderPoem) holder;
+            ViewHolderPoem poem = (ViewHolderPoem) holder;
 
             switch (_font) {
                 case "textDefault":
@@ -206,13 +207,15 @@ class L2PurportAdapter extends RecyclerView.Adapter {
                     break;
             }
             poem.poem.setTextColor(context.getResources().getColor(R.color.text_color));
-
+            poem.poem.setTypeface(null, Typeface.ITALIC);
             if (_purport && (page.getPurport() != null && page.getPurport().length() != 0)) {
-                String r =purport.get(position - 1);
-                poem.poem.setText(r);
+                String t = purport.get(position - 1).trim();
+                Log.d(TAG, "onBindViewHolder: " + t);
+                poem.poem.setText(t);
             } else
                 poem.poem.setVisibility(View.GONE);
         }
+
 
     }
 
@@ -239,7 +242,6 @@ class L2PurportAdapter extends RecyclerView.Adapter {
             text = itemView.findViewById(R.id.text);
             synonyms = itemView.findViewById(R.id.synonyms);
             translation = itemView.findViewById(R.id.translation);
-
         }
     }
 

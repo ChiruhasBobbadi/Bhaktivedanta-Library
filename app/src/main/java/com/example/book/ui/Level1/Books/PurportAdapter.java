@@ -129,15 +129,15 @@ public class PurportAdapter extends RecyclerView.Adapter {
                     searchKey = searchKey.toLowerCase().trim();
                     int startIndex = s.indexOf(searchKey);
                     if (startIndex == -1) {
-                        rest.translation.setText(page.getTranslation().replace("¶", ""));
+                        rest.translation.setText(page.getTranslation().replace("¶", "")+"\n");
                     } else {
-                        SpannableString str = new SpannableString(page.getTranslation());
+                        SpannableString str = new SpannableString(page.getTranslation()+"\n");
                         str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex + searchKey.length(), 0);
                         rest.translation.setText(str);
                     }
 
                 } else
-                    rest.translation.setText(page.getTranslation().replace("¶", ""));
+                    rest.translation.setText(page.getTranslation().replace("¶", "")+"\n");
             } else
                 rest.translation.setVisibility(View.GONE);
 

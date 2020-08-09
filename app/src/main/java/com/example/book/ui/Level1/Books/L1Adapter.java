@@ -3,6 +3,7 @@ package com.example.book.ui.Level1.Books;
 import android.content.Context;
 import android.os.Vibrator;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.book.R;
 import com.example.book.dao.level1.pages.Level1_Pages;
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,9 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
     private L1Adapter.ItemListener myListener;
     private List<Level1_Pages> l1Pages;
     private String searchKey;
+    List<String> tags;
+    List<String> list_text=new ArrayList<>();
+    FlexboxLayout container;
     public L1Adapter(L1Adapter.ItemListener listener, Context con) {
         myListener = listener;
         context = con;
@@ -43,8 +49,11 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
 
     @Override
     public L1Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
+
+        ViewHolder holder =  new ViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyler_view_base, parent, false));
+
+        return holder;
     }
 
     @Override
@@ -67,6 +76,11 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
 
     }
 
+    public void setTags(List<String> tags){
+
+        notifyDataSetChanged();
+    }
+
 
     public void setData(List<Level1_Pages> pages, boolean text, boolean purport, boolean trans, boolean syn,String font,String search) {
         l1Pages = pages;
@@ -79,6 +93,29 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
         Log.d(TAG, "setData: "+searchKey);
         notifyDataSetChanged();
     }
+
+    /* public void setTags(List<String> tagList) {
+        for (int index = 0; index < tagList.size(); index++) {
+            final String tagName = tagList.get(index);
+            final Chip chip = new Chip(context);
+            int paddingDp = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 10,
+                    context.getResources().getDisplayMetrics()
+            );
+            chip.setPadding(paddingDp, paddingDp, paddingDp, paddingDp);
+            chip.setText(tagName);
+            chip.setCloseIconResource(R.drawable.close);
+            chip.setCloseIconEnabled(true);
+            //Added click listener on close icon to remove tag from ChipGroup
+            chip.setOnCloseIconClickListener(v -> {
+                tagList.remove(tagName);
+                chipGroup.removeView(chip);
+
+            });
+
+            chipGroup.addView(chip);
+        }
+    }*/
 
     @Override
     public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
@@ -99,6 +136,7 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
         PurportAdapter adapter;
         RecyclerView rv;
         TextView text;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

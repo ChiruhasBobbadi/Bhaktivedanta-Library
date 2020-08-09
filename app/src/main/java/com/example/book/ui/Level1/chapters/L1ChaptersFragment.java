@@ -2,12 +2,9 @@ package com.example.book.ui.Level1.chapters;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
@@ -15,7 +12,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.book.Model.LastLevelModel;
 import com.example.book.R;
+import com.example.book.helper.Chapteradapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +29,10 @@ public class L1ChaptersFragment extends Fragment {
     SharedPreferences sharedpreferences;
     String bookName;
     L1ChaptersViewModel viewModel;
-    List<String> chapters;
+
     ListView listView;
     View v;
+    List<LastLevelModel> model;
 
     public L1ChaptersFragment() {
         // Required empty public constructor
@@ -57,17 +57,17 @@ public class L1ChaptersFragment extends Fragment {
     private void listItemClick() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
 
-            String chap = chapters.get(position).split("\\.")[1].trim();
+            String chap = model.get(position).getLastLevelName().split("\\.")[1].trim();
             v = view;
-            viewModel.getPageNumberOfChapter(bookName,chap).observe(getViewLifecycleOwner(), number -> {
+            viewModel.getPageNumberOfChapter(bookName, chap).observe(getViewLifecycleOwner(), number -> {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("pageNumber", number+"-"+"level1");
-                bundle.putString("title",bookName);
+                bundle.putString("pageNumber", number + "-" + "level1");
+                bundle.putString("title", bookName);
 
                 NavController controller = Navigation.findNavController(view);
 
-                controller.navigate(R.id.action_l1ChaptersFragment_to_l1Fragment,bundle);
+                controller.navigate(R.id.action_l1ChaptersFragment_to_l1Fragment, bundle);
 
             });
 
@@ -79,12 +79,13 @@ public class L1ChaptersFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(L1ChaptersViewModel.class);
 
         viewModel.getChapters(bookName).observe(getViewLifecycleOwner(), strings -> {
-            chapters = strings;
 
-            for (int i = 0; i < chapters.size(); i++) {
-                chapters.set(i,(i+1)+". "+chapters.get(i));
-            }
-            createListView(chapters);
+            model = new ArrayList<>();
+            for (int i = 0; i < strings.size(); i++)
+                model.add(new LastLevelModel((i + 1) + ". " + strings.get(i).getChapterName(), strings.get(i).getTranslation().replace("¶", "")));
+
+
+            createListView();
 
         });
     }
@@ -96,9 +97,10 @@ public class L1ChaptersFragment extends Fragment {
         bookName = sharedpreferences.getString("bookName", "");
     }
 
-    public void createListView(List<String> list) {
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.chapter_view, list);
-        listView.setAdapter(arrayAdapter);
+    public void createListView() {
+        Chapteradapter chapteradapter = new Chapteradapter(getActivity(), model);
+
+        listView.setAdapter(chapteradapter);
     }
 
 

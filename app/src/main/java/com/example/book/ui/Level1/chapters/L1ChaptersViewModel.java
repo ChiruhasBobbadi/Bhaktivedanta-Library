@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.book.dao.level1.pages.Level1_Pages;
 import com.example.book.database.L1Repo;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class L1ChaptersViewModel extends AndroidViewModel {
 
     }
 
-    public LiveData<List<String>> getChapters(String book) {
+    public LiveData<List<Level1_Pages>> getChapters(String book) {
         return repo.getChapters(book);
     }
 

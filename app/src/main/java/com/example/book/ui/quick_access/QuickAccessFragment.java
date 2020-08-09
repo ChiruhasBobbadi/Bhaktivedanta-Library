@@ -181,7 +181,7 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
     }
 
     private void setL1Chapters() {
-        viewModel.l1Repo.getChapters(bookName).observe(getViewLifecycleOwner(), chap -> {
+        viewModel.l1Repo.getChapterNames(bookName).observe(getViewLifecycleOwner(), chap -> {
 
             List<String> temp = new ArrayList<>();
             temp.add("Select Chapter");

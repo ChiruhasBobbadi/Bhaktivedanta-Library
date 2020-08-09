@@ -12,12 +12,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BookMarksRepo {
-    Database db;
+    PersistentDB db;
     private BookmarksDao bookmarksDao;
 
     public BookMarksRepo(Application application) {
 
-        db = Database.getInstance(application);
+        db = PersistentDB.getInstance(application);
 
         bookmarksDao = db.bookmarksDao();
     }

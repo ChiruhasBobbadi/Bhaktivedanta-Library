@@ -1,9 +1,12 @@
 package com.example.book.ui.Level3.Books;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,14 +30,22 @@ import com.example.book.R;
 import com.example.book.dao.bookmarks.Bookmarks;
 import com.example.book.dao.bookmarks.BookmarksViewModel;
 import com.example.book.dao.level3.pages.Level3_Pages;
+import com.example.book.dao.tags.Tags;
+import com.example.book.dao.tags.TagsViewModel;
+import com.example.book.helper.TagDialog;
+import com.example.book.ui.Level2.books.L2Fragment;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
+public class L3Fragment extends Fragment implements L3Adapter.ItemListener, TagDialog.tagListener {
 
     private static final String TAG = "L3Fragment";
-
+    TagsViewModel tagsViewModel;
     RecyclerView rv;
     L3Adapter adapter;
     SharedPreferences sharedpreferences;
@@ -50,6 +61,8 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
 
     BookmarksViewModel bookmarksViewModel;
     private int current_page;
+    private ChipGroup chipGroup;
+    private TagDialog dialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +70,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
         setHasOptionsMenu(true);
         View root = inflater.inflate(R.layout.fragment_l3, container, false);
         view = root;
+        chipGroup = root.findViewById(R.id.container);
         checkIfFromVerse();
         getBookName();
 
@@ -71,7 +85,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
     private void viewModelCall() {
         bookmarksViewModel = ViewModelProviders.of(this).get(BookmarksViewModel.class);
         viewModel = ViewModelProviders.of(this).get(L3ViewModel.class);
-
+        tagsViewModel = ViewModelProviders.of(this).get(TagsViewModel.class);
         if (!isFromVerse)
             viewModel.getCurrentPage(bookName).observe(getViewLifecycleOwner(), integer -> {
                 Log.d(TAG, "viewModelCall: "+integer);
@@ -172,7 +186,18 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
             }
         });
 
+        chipGroup.removeAllViews();
+        chipGroup.setVisibility(View.GONE);
+
+        tagsViewModel.getTagsOfPage(bookName, currPage.getVerseName(), currPage.getPageNumber()).observe(getViewLifecycleOwner(), list -> {
+            chipGroup.removeAllViews();
+            if (list.size() > 0)
+                chipGroup.setVisibility(View.VISIBLE);
+            setTag(list);
+        });
+
     }
+
 
 
     @Override
@@ -222,10 +247,74 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener {
 
                 controller.navigate(R.id.action_l3Fragment_to_l3Canto);
                 return true;
+
+            case R.id.tag:
+                openDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+
+    }
+
+    private void openDialog() {
+        dialog = new TagDialog();
+
+        dialog.setTargetFragment(L3Fragment.this, 300);
+        dialog.show(getFragmentManager(), "tag open");
+    }
+
+    @Override
+    public void onDialogSubmit(String tag) {
+        if (!tag.startsWith("#")) {
+            Toast.makeText(getActivity(), "Tag should start with #", Toast.LENGTH_LONG).show();
+        } else if (tag.contains(" "))
+            Toast.makeText(getContext(), "Tag should not contain space", Toast.LENGTH_SHORT).show();
+        else {
+
+            if (tag.length() == 1)
+                Toast.makeText(getContext(), "Please add a valid tag name", Toast.LENGTH_SHORT).show();
+            else {
+                addTag(new Tags(tag, bookName, 2, currPage.getVerseName(), currPage.getPageNumber()));
+                Log.d(TAG, "onFinishEditDialog: ");
+            }
+
+
+        }
+    }
+
+    private void addTag(Tags tag) {
+        Log.d(TAG, "addTag: ");
+        tagsViewModel.addTag(tag);
+        dialog.dismiss();
+    }
+
+    private void setTag(final List<String> tagList) {
+
+        for (int index = 0; index < tagList.size(); index++) {
+            final String tagName = tagList.get(index);
+            final Chip chip = new Chip(getContext());
+            int paddingDp = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 10,
+                    getResources().getDisplayMetrics()
+            );
+            chip.setPadding(paddingDp, paddingDp, paddingDp, paddingDp);
+            chip.setText(tagName);
+            chip.setCloseIconResource(R.drawable.close);
+            chip.setCloseIconEnabled(true);
+            //Added click listener on close icon to remove tag from ChipGroup
+            chip.setOnCloseIconClickListener(v -> {
+                tagsViewModel.deleteTag(tagName, bookName, currPage.getChapterName());
+                tagList.remove(tagName);
+                chipGroup.removeView(chip);
+                Vibrator vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                // Vibrate for 20 milliseconds
+                vibrator.vibrate(20);
+            });
+
+            chipGroup.addView(chip);
+        }
 
     }
 }

@@ -1,29 +1,24 @@
 package com.example.book.dao.tags;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "tags")
 public class Tags {
+
     @PrimaryKey(autoGenerate = true)
     int id;
+    @NonNull
     String tagName;
+    @NonNull
     String bookName;
+    @NonNull
     int level;
-    String cantoName;
-    String chapterName;
-    String verseName;
+    @NonNull
+    String lastLevel;
+    @NonNull
     int pageNumber;
-
-    public Tags(String tagName, String bookName, int level, String cantoName, String chapterName, String verseName, int pageNumber) {
-        this.tagName = tagName;
-        this.bookName = bookName;
-        this.level = level;
-        this.cantoName = cantoName;
-        this.chapterName = chapterName;
-        this.verseName = verseName;
-        this.pageNumber = pageNumber;
-    }
 
     public int getId() {
         return id;
@@ -46,7 +41,7 @@ public class Tags {
     }
 
     public void setBookName(String bookName) {
-        bookName = bookName;
+        this.bookName = bookName;
     }
 
     public int getLevel() {
@@ -57,28 +52,12 @@ public class Tags {
         this.level = level;
     }
 
-    public String getCantoName() {
-        return cantoName;
+    public String getLastLevel() {
+        return lastLevel;
     }
 
-    public void setCantoName(String cantoName) {
-        this.cantoName = cantoName;
-    }
-
-    public String getChapterName() {
-        return chapterName;
-    }
-
-    public void setChapterName(String chapterName) {
-        this.chapterName = chapterName;
-    }
-
-    public String getVerseName() {
-        return verseName;
-    }
-
-    public void setVerseName(String verseName) {
-        this.verseName = verseName;
+    public void setLastLevel(String lastLevel) {
+        this.lastLevel = lastLevel;
     }
 
     public int getPageNumber() {
@@ -86,6 +65,26 @@ public class Tags {
     }
 
     public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Tags{" +
+
+                ", tagName='" + tagName + '\'' +
+                ", bookName='" + bookName + '\'' +
+                ", level=" + level +
+                ", lastLevel='" + lastLevel + '\'' +
+                ", pageNumber=" + pageNumber +
+                '}';
+    }
+
+    public Tags(String tagName, String bookName, int level, String lastLevel, int pageNumber) {
+        this.tagName = tagName;
+        this.bookName = bookName;
+        this.level = level;
+        this.lastLevel = lastLevel;
         this.pageNumber = pageNumber;
     }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.book.dao.level1.books.Level1_Books;
+import com.example.book.dao.level1.pages.Level1_Pages;
 import com.example.book.database.L1Repo;
 import com.example.book.database.L2Repo;
 import com.example.book.database.L3Repo;
@@ -36,13 +37,7 @@ public class QuickAccessViewModel extends AndroidViewModel {
         return  lRepo.getLevel(book);
     }
 
-    public LiveData<List<String>> getL1Chapters(String book){
 
-       return l1Repo.getChapters(book);
-
-
-
-    }
 
 
 }

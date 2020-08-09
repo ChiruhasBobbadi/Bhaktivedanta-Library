@@ -14,6 +14,7 @@ import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -26,6 +27,8 @@ import com.example.book.R;
 import com.example.book.dao.level1.pages.Level1_Pages;
 import com.example.book.dao.level2.pages.Level2_Pages;
 import com.example.book.dao.level3.pages.Level3_Pages;
+import com.example.book.dao.tags.Tags;
+import com.example.book.dao.tags.TagsViewModel;
 import com.example.book.ui.quick_access.QuickAccessViewModel;
 
 import java.util.ArrayList;
@@ -41,10 +44,12 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
     private static final String TAG = "SearchFragment";
     SearchAdapter adapter;
     SearchViewModel viewModel;
+    TagsViewModel tagsViewModel;
     List<SearchModel> searchResults;
     SharedPreferences.Editor editor;
     QuickAccessViewModel quickAccessViewModel;
     SharedPreferences sharedpreferences;
+    List<Tags> tags;
     private Menu menu;
     private RecyclerView rv;
     private String searchKey;
@@ -55,6 +60,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_search, container, false);
         viewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
+        tagsViewModel = ViewModelProviders.of(this).get(TagsViewModel.class);
         quickAccessViewModel = ViewModelProviders.of(this).get(QuickAccessViewModel.class);
         rv = root.findViewById(R.id.rv);
         adapter = new SearchAdapter(this);
@@ -89,13 +95,12 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                //Log.d(TAG, "before clearing "+searchResults.size());
                 searchResults.clear();
                 adapter.setData(searchResults);
 
                 searchKey = s;
                 if (s.trim().startsWith("#"))
-                    tagSearch(s.toLowerCase());
+                    fetchTags(s);
                 else if (s.equals("")) {
                     searchResults.clear();
                     adapter.setData(searchResults);
@@ -107,7 +112,8 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
 
             @Override
             public boolean onQueryTextChange(String s) {
-
+                if (s.trim().startsWith("#") && s.length()>1)
+                    fetchTags(s);
 
                 return false;
             }
@@ -158,6 +164,25 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
     private void tagSearch(String string) {
 
     }
+
+
+    private void fetchTags(String tagName){
+        tagsViewModel.getTagsByName(tagName).observe(getViewLifecycleOwner(), tags -> {
+           this.tags=tags;
+
+           List<SearchModel> sm = new ArrayList<>();
+
+            for (int i = 0; i < tags.size(); i++) {
+                Tags t = this.tags.get(i);
+                sm.add(new SearchModel(t.getPageNumber(),t.getBookName(),t.getLastLevel(),t.getLevel()));
+            }
+
+
+            adapter.setData(sm);
+        });
+    }
+
+
 
 
     @Override
