@@ -305,7 +305,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener, TagD
             chip.setCloseIconEnabled(true);
             //Added click listener on close icon to remove tag from ChipGroup
             chip.setOnCloseIconClickListener(v -> {
-                tagsViewModel.deleteTag(tagName, bookName, currPage.getChapterName());
+                tagsViewModel.deleteTag(tagName, bookName, currPage.getVerseName());
                 tagList.remove(tagName);
                 chipGroup.removeView(chip);
                 Vibrator vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
