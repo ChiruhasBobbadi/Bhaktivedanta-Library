@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Book</string>
+    <string name="app_name">Bhaktivedanta Library</string>
     <string name="title_books">Books</string>
     <string name="title_bookmarks">Bookmarks</string>
     <string name="title_settings">Settings</string>
