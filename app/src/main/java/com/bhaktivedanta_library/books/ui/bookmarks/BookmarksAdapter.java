@@ -35,13 +35,7 @@ class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.ViewHolder>
     public void onBindViewHolder(@NonNull BookmarksAdapter.ViewHolder holder, int position) {
 
         Bookmarks bookmark = bookmarks.get(position);
-        holder.bookName.setText(bookmark.getBookName());
-
-        if (bookmark.getLevel() == 1)
-            holder.lastLayer.setText(bookmark.getChapter());
-        else
-            holder.lastLayer.setText(bookmark.getVerseName());
-
+        holder.bookName.setText(bookmark.getDisplayName());
 
         holder.card.setOnClickListener(view -> itemListener.itemClicked(bookmark, view));
 

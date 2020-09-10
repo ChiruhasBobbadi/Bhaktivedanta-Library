@@ -73,7 +73,7 @@ public class BookmarksFragment extends Fragment implements BookmarksAdapter.Item
         editor.putString("bookName", bookmark.getBookName());
         editor.apply();
         Bundle bundle = new Bundle();
-        bundle.putString("title", bookmark.getBookName());
+        bundle.putString("title", bookmark.getDisplayName());
         switch (bookmark.getLevel()){
             case 1:
                 quickAccessViewModel.l1Repo.updateCurrentPage(bookmark.getBookName(),bookmark.getPageNumber());

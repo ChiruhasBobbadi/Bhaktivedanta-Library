@@ -228,7 +228,7 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener, TagD
 
                 Bookmarks bkmk = new Bookmarks(
                         "", currPage.getChapterName(), 1,
-                        current_page, "", currPage.getBookName()
+                        current_page, "", currPage.getBookName(),new ToolBarNameHelper().getL1TitleName(currPage.getBookName(),currPage.getPageNumber())
                 );
 
                 // un-bookmarking

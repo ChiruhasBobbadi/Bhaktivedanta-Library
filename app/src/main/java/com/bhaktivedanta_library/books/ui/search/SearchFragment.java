@@ -192,10 +192,11 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
                         sm.add(new SearchModel(t.getPageNumber(), t.getBookName(),
                                 t.getLastLevel(), t.getLevel(), helper.getL2TitleName(t.getBookName(), 0, t.getLastLevel())));
                     else
+                        // todo
                         sm.add(new SearchModel(t.getPageNumber(), t.getBookName(),
-                                t.getLastLevel(), t.getLevel(), helper.getL2TitleName(t.getBookName(), 0,t.getLastLevel())));
-                }else
-                    sm.add(new SearchModel(t.getPageNumber(), t.getBookName(), t.getLastLevel(), t.getLevel(),helper.getL3TitleName(t.getLastLevel())));
+                                t.getLastLevel(), t.getLevel(), helper.getL2TitleName(t.getBookName(), 0, t.getLastLevel())));
+                } else
+                    sm.add(new SearchModel(t.getPageNumber(), t.getBookName(), t.getLastLevel(), t.getLevel(), helper.getL3TitleName(t.getLastLevel())));
 
             }
 

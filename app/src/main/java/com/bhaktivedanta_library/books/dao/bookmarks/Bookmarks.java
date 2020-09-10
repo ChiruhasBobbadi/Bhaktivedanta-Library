@@ -8,13 +8,32 @@ public class Bookmarks {
 
     @PrimaryKey(autoGenerate = true)
     int id;
-
     String canto;
     String chapter;
     int level;
     int pageNumber;
     String verseName;
     String bookName;
+    String displayName;
+
+    //todo
+    public Bookmarks( String canto, String chapter, int level, int pageNumber, String verseName, String bookName, String displayName) {
+        this.canto = canto;
+        this.chapter = chapter;
+        this.level = level;
+        this.pageNumber = pageNumber;
+        this.verseName = verseName;
+        this.bookName = bookName;
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displatName) {
+        this.displayName = displatName;
+    }
 
     @Override
     public String toString() {
@@ -84,12 +103,4 @@ public class Bookmarks {
         this.bookName = bookName;
     }
 
-    public Bookmarks(String canto, String chapter, int level, int pageNumber, String verseName, String bookName) {
-        this.canto = canto;
-        this.chapter = chapter;
-        this.level = level;
-        this.pageNumber = pageNumber;
-        this.verseName = verseName;
-        this.bookName = bookName;
-    }
 }

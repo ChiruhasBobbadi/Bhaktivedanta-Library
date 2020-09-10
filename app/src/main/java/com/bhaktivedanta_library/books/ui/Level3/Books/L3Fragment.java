@@ -229,7 +229,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener, TagD
 
                 Bookmarks bkmk = new Bookmarks(
                         currPage.getLevel_3_Name(), currPage.getChapterName(), 3,
-                        current_page, currPage.getVerseName(), currPage.getBookName()
+                        current_page, currPage.getVerseName(), currPage.getBookName(),new ToolBarNameHelper().getL3TitleName(currPage.getVerseName())
                 );
 
                 // un-bookmarking

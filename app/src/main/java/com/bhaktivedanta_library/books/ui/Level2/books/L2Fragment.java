@@ -231,10 +231,17 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener, TagD
             case R.id.bookmark:
                 Drawable myIcon = getResources().getDrawable(R.drawable.bookmark);
                 Drawable bookmark = menu.getItem(1).getIcon();
-                Bookmarks bkmk = new Bookmarks(
+                Bookmarks bkmk;
+                if(currPage.getBookName().equals("Bhagavad-gītā As It Is"))
+                 bkmk = new Bookmarks(
                         "", currPage.getChapterName(), 2, currentPageNumber
-                        , currPage.getVerseName(), currPage.getBookName()
+                        , currPage.getVerseName(), currPage.getBookName(),new ToolBarNameHelper().getL2TitleName(currPage.getBookName(),0,currPage.getVerseName())
                 );
+                else
+                    bkmk = new Bookmarks(
+                            "", currPage.getChapterName(), 2, currentPageNumber
+                            , currPage.getVerseName(), currPage.getBookName(),new ToolBarNameHelper().getL2TitleName(currPage.getBookName(),currPage.getChapter(),currPage.getVerse()+"")
+                    );
                 // un-bookmarking
                 if (isBookmark) {
                     // show popup to remove bookmark
