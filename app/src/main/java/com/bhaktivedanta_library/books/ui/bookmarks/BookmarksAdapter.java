@@ -73,7 +73,6 @@ class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.ViewHolder>
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             bookName = itemView.findViewById(R.id.bookName);
-            lastLayer = itemView.findViewById(R.id.lastLayer);
             card = itemView.findViewById(R.id.layout);
         }
     }

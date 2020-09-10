@@ -35,12 +35,7 @@ class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull SearchAdapter.ViewHolder holder, int position) {
 
         SearchModel model = models.get(position);
-        holder.bookName.setText(model.getBookName());
-
-
-            holder.lastLayer.setText(model.getLastLevelName());
-
-
+        holder.bookName.setText(model.getDisplayName());
         holder.card.setOnClickListener(view -> itemListener.itemClicked(model, view));
 
 
@@ -71,7 +66,6 @@ class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             bookName = itemView.findViewById(R.id.bookName);
-            lastLayer = itemView.findViewById(R.id.lastLayer);
             card = itemView.findViewById(R.id.layout);
         }
     }

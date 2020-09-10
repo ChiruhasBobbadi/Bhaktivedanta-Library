@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
@@ -16,6 +17,7 @@ import androidx.navigation.Navigation;
 import com.bhaktivedanta_library.books.Model.LastLevelModel;
 import com.bhaktivedanta_library.books.R;
 import com.bhaktivedanta_library.books.helper.Chapteradapter;
+import com.bhaktivedanta_library.books.helper.ToolBarNameHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +54,12 @@ public class L3VerseFragment extends Fragment {
         return root;
     }
 
+
+
     private void listItemClick() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
 
-            String verse = model.get(position).getLastLevelName().split("\\.",2)[1].trim();
+            String verse = model.get(position).getLastLevelName().trim();
 
             Log.d(TAG, "listItemClick: "+verse);
             v = view;
@@ -66,7 +70,7 @@ public class L3VerseFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 Log.d(TAG, "pageNumber: "+number);
                 bundle.putString("pageNumber", number + "-" + "level3");
-                bundle.putString("title", bookName);
+                bundle.putString("title", new ToolBarNameHelper().getL3TitleName(verse));
 
                 NavController controller = Navigation.findNavController(view);
 
@@ -88,7 +92,7 @@ public class L3VerseFragment extends Fragment {
 
             model = new ArrayList<>();
             for (int i = 0; i < strings.size(); i++)
-                model.add(new LastLevelModel((i + 1) + ". " + strings.get(i).getVerseName(), strings.get(i).getTranslation().replace("¶", "")));
+                model.add(new LastLevelModel(strings.get(i).getVerseName(), strings.get(i).getTranslation().replace("¶", "")));
 
 
             createListView();

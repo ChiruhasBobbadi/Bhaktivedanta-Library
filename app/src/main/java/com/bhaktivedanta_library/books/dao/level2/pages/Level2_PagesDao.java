@@ -27,4 +27,6 @@ public interface Level2_PagesDao {
     @Query("SELECT * FROM level2_pages WHERE translation LIKE '%' || :key || '%' or purport LIKE '%' || :key || '%' ")
     LiveData<List<Level2_Pages>> getMatchedL2Pages(String key);
 
+    @Query("SELECT * FROM level2_pages WHERE bookName=:bookName and pageNumber=:page")
+    LiveData<Level2_Pages> getL2Page(String bookName, int page);
 }

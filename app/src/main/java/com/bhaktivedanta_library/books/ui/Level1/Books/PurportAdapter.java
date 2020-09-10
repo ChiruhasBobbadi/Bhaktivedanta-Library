@@ -26,7 +26,7 @@ public class PurportAdapter extends RecyclerView.Adapter {
     List<String> purport;
     String _font;
     Context context;
-    int currentPosition;
+
     boolean _text, _synonyms, _translation, _purport;
     String searchKey;
 
@@ -107,7 +107,7 @@ public class PurportAdapter extends RecyclerView.Adapter {
             rest.translation.setTypeface(Typeface.DEFAULT_BOLD);
 
             if (_text && (page.getText() != null && page.getText().length() != 0))
-                rest.text.setText(page.getText());
+                rest.text.setText(page.getText().trim());
 
 
             else
@@ -172,7 +172,7 @@ public class PurportAdapter extends RecyclerView.Adapter {
                     searchKey = searchKey.toLowerCase().trim();
                     int startIndex = s.indexOf(searchKey);
                     if (startIndex == -1)
-                        purp.purport.setText(r);
+                        purp.purport.setText(   r);
                     else {
                         SpannableString str = new SpannableString(r);
                         str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex + searchKey.length(), 0);

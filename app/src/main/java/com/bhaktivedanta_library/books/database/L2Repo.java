@@ -72,4 +72,7 @@ public class L2Repo {
     }
 
 
+    public LiveData<Level2_Pages> getL2Pages(String bookName, int page) {
+        return  l2PDao.getL2Page(bookName,page);
+    }
 }

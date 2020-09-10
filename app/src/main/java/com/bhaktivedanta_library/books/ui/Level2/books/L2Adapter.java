@@ -50,7 +50,7 @@ class L2Adapter extends RecyclerView.Adapter<L2Adapter.ViewHolder> {
 
         Level2_Pages page = l2Pages.get(position);
 
-        holder.text.setText(page.getVerseName()+"");
+
         holder.setData(page);
 
     }
@@ -91,12 +91,12 @@ class L2Adapter extends RecyclerView.Adapter<L2Adapter.ViewHolder> {
 
         L2PurportAdapter adapter;
         RecyclerView rv;
-        TextView text;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             rv = itemView.findViewById(R.id.rv);
-            text = itemView.findViewById(R.id.text);
+
             rv.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             adapter = new L2PurportAdapter();
 

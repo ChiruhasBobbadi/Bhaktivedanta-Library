@@ -1,6 +1,7 @@
 package com.bhaktivedanta_library.books.ui.Level2.Verse;
 
 import android.app.Application;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -29,4 +30,10 @@ public class L2VerseViewModel extends AndroidViewModel {
     public LiveData<List<Level2_Pages>> getNavVerses(String book, String chapter){
         return repo.getNavVerses(book,chapter);
     }
+
+    public LiveData<Level2_Pages> getL2Page(String bookName,int page){
+        return repo.getL2Pages(bookName,page);
+    }
+
+
 }

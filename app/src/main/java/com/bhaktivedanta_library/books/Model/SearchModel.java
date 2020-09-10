@@ -5,6 +5,15 @@ public class SearchModel {
     String bookName;
     String lastLevelName;
     int level;
+    String displayName;
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
     public int getPageNumer() {
         return pageNumer;
@@ -38,10 +47,11 @@ public class SearchModel {
         this.level = level;
     }
 
-    public SearchModel(int pageNumer, String bookName, String lastLevelName, int level) {
+    public SearchModel(int pageNumer, String bookName, String lastLevelName, int level, String displayName) {
         this.pageNumer = pageNumer;
         this.bookName = bookName;
         this.lastLevelName = lastLevelName;
         this.level = level;
+        this.displayName = displayName;
     }
 }

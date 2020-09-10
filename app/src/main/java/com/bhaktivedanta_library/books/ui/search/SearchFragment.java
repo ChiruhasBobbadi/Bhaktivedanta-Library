@@ -28,6 +28,7 @@ import com.bhaktivedanta_library.books.dao.level2.pages.Level2_Pages;
 import com.bhaktivedanta_library.books.dao.level3.pages.Level3_Pages;
 import com.bhaktivedanta_library.books.dao.tags.Tags;
 import com.bhaktivedanta_library.books.dao.tags.TagsViewModel;
+import com.bhaktivedanta_library.books.helper.ToolBarNameHelper;
 import com.bhaktivedanta_library.books.ui.quick_access.QuickAccessViewModel;
 
 import java.util.ArrayList;
@@ -49,9 +50,11 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
     QuickAccessViewModel quickAccessViewModel;
     SharedPreferences sharedpreferences;
     List<Tags> tags;
+    ToolBarNameHelper helper;
     private Menu menu;
     private RecyclerView rv;
     private String searchKey;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,6 +64,8 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         viewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
         tagsViewModel = ViewModelProviders.of(this).get(TagsViewModel.class);
         quickAccessViewModel = ViewModelProviders.of(this).get(QuickAccessViewModel.class);
+
+        helper = new ToolBarNameHelper();
         rv = root.findViewById(R.id.rv);
         adapter = new SearchAdapter(this);
         DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
@@ -83,7 +88,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         MenuItem item = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setIconified(false);
-        searchView.setQueryHint("Search for words or Tags");
+        searchView.setQueryHint("Search #food, lord");
         searchView.setMaxWidth(Integer.MAX_VALUE);
         int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
         View searchPlate = searchView.findViewById(searchPlateId);
@@ -111,7 +116,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
 
             @Override
             public boolean onQueryTextChange(String s) {
-                if (s.trim().startsWith("#") && s.length()>1)
+                if (s.trim().startsWith("#") && s.length() > 1)
                     fetchTags(s);
 
                 return false;
@@ -134,7 +139,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         viewModel.getMatchedL1Pages(string).observe(getViewLifecycleOwner(), results -> {
             for (int i = 0; i < results.size(); i++) {
                 Level1_Pages page = results.get(i);
-                searchResults.add(new SearchModel(page.getPageNumber(), page.getBookName(), page.getChapterName(), 1));
+                searchResults.add(new SearchModel(page.getPageNumber(), page.getBookName(), page.getChapterName(), 1, helper.getL1TitleName(page.getBookName(), page.getPageNumber())));
             }
             fetchL2Results(string);
         });
@@ -144,7 +149,12 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         viewModel.getMatchedL2Pages(string).observe(getViewLifecycleOwner(), results -> {
             for (int i = 0; i < results.size(); i++) {
                 Level2_Pages page = results.get(i);
-                searchResults.add(new SearchModel(page.getPageNumber(), page.getBookName(), page.getVerseName(), 2));
+                if (page.getBookName().equals("Bhagavad-gītā As It Is"))
+                    searchResults.add(new SearchModel(page.getPageNumber(), page.getBookName(), page.getVerseName(),
+                            2, helper.getL2TitleName(page.getBookName(), 0, page.getVerseName())));
+                else
+                    searchResults.add(new SearchModel(page.getPageNumber(), page.getBookName(), page.getVerseName(),
+                            2, helper.getL2TitleName(page.getBookName(), page.getChapter(), page.getVerse() + "")));
             }
             fetchL3Results(string);
         });
@@ -154,8 +164,10 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         viewModel.getMatchedL3Pages(string).observe(getViewLifecycleOwner(), results -> {
             for (int i = 0; i < results.size(); i++) {
                 Level3_Pages page = results.get(i);
-                searchResults.add(new SearchModel(page.getPageNumber(), page.getBookName(), page.getVerseName(), 3));
+                searchResults.add(new SearchModel(page.getPageNumber(), page.getBookName(), page.getVerseName(), 3, helper.getL3TitleName(page.getVerseName())));
             }
+
+
             adapter.setData(searchResults);
         });
     }
@@ -165,23 +177,32 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
     }
 
 
-    private void fetchTags(String tagName){
+    private void fetchTags(String tagName) {
         tagsViewModel.getTagsByName(tagName).observe(getViewLifecycleOwner(), tags -> {
-           this.tags=tags;
+            this.tags = tags;
 
-           List<SearchModel> sm = new ArrayList<>();
+            List<SearchModel> sm = new ArrayList<>();
 
             for (int i = 0; i < tags.size(); i++) {
                 Tags t = this.tags.get(i);
-                sm.add(new SearchModel(t.getPageNumber(),t.getBookName(),t.getLastLevel(),t.getLevel()));
+                if (t.getLevel() == 1)
+                    sm.add(new SearchModel(t.getPageNumber(), t.getBookName(), t.getLastLevel(), t.getLevel(), helper.getL1TitleName(t.getBookName(), t.getPageNumber())));
+                else if (t.getLevel() == 2) {
+                    if (t.getBookName().equals("Bhagavad-gītā As It Is"))
+                        sm.add(new SearchModel(t.getPageNumber(), t.getBookName(),
+                                t.getLastLevel(), t.getLevel(), helper.getL2TitleName(t.getBookName(), 0, t.getLastLevel())));
+                    else
+                        sm.add(new SearchModel(t.getPageNumber(), t.getBookName(),
+                                t.getLastLevel(), t.getLevel(), helper.getL2TitleName(t.getBookName(), 0,t.getLastLevel())));
+                }else
+                    sm.add(new SearchModel(t.getPageNumber(), t.getBookName(), t.getLastLevel(), t.getLevel(),helper.getL3TitleName(t.getLastLevel())));
+
             }
 
 
             adapter.setData(sm);
         });
     }
-
-
 
 
     @Override
@@ -193,11 +214,11 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         editor = sharedpreferences.edit();
         editor.putString("bookName", bookmark.getBookName());
 
-        Log.d(TAG, "itemClicked: "+searchKey);
+        Log.d(TAG, "itemClicked: " + searchKey);
         editor.apply();
         Bundle bundle = new Bundle();
-        bundle.putString("title", bookmark.getBookName());
-        bundle.putString("searchKey",searchKey);
+        bundle.putString("title", bookmark.getDisplayName());
+        bundle.putString("searchKey", searchKey);
         switch (bookmark.getLevel()) {
             case 1:
                 quickAccessViewModel.l1Repo.updateCurrentPage(bookmark.getBookName(), bookmark.getPageNumer());

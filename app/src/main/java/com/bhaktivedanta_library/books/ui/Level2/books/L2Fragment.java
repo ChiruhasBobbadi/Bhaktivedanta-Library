@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -33,10 +34,12 @@ import com.bhaktivedanta_library.books.dao.level2.pages.Level2_Pages;
 import com.bhaktivedanta_library.books.dao.tags.Tags;
 import com.bhaktivedanta_library.books.dao.tags.TagsViewModel;
 import com.bhaktivedanta_library.books.helper.TagDialog;
+import com.bhaktivedanta_library.books.helper.ToolBarNameHelper;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
+import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -60,7 +63,7 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener, TagD
     private ChipGroup chipGroup;
     private int currentPageNumber;
     private TagDialog dialog;
-
+    private int sample;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,11 +72,10 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener, TagD
         View root = inflater.inflate(R.layout.fragment_l2, container, false);
         view = root;
         chipGroup = root.findViewById(R.id.container);
+        sample=-1;
         checkIfFromVerse();
         getBookName();
-
         initRecyclerView();
-
         viewModelCall();
 
 
@@ -167,6 +169,8 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener, TagD
     @Override
     public void onPageChange(int currentPage) {
         Log.d(TAG, "onPageChange: page updated");
+
+
         currentPageNumber = currentPage;
         viewModel.updateCurrentPage(bookName, currentPage);
     }
@@ -175,6 +179,15 @@ public class L2Fragment extends Fragment implements L2Adapter.ItemListener, TagD
     public void itemChanged(Level2_Pages page) {
         currPage = page;
         Log.d(TAG, "itemChanged: ");
+
+        if(sample!=-1){
+            if(bookName.equals("Bhagavad-gītā As It Is"))
+                Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(new ToolBarNameHelper().getL2TitleName(bookName,currPage.getChapter(),currPage.getVerseName()));
+            else
+                Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(new ToolBarNameHelper().getL2TitleName(bookName,currPage.getChapter(),currPage.getVerse()+""));
+        }
+        else
+            sample=1;
 
         bookmarksViewModel.isBookmark(currPage.getBookName(), "", currPage.getChapterName(), currPage.getVerseName()).observe(getViewLifecycleOwner(), bookmarked -> {
             Log.d(TAG, "isBookmark " + bookmarked);

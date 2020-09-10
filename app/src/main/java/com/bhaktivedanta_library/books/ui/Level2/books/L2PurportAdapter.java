@@ -111,8 +111,7 @@ public class L2PurportAdapter extends RecyclerView.Adapter {
             rest.translation.setTypeface(Typeface.DEFAULT_BOLD);
 
             if (_text && (page.getText() != null && page.getText().length() != 0))
-                rest.text.setText(page.getText());
-
+                rest.text.setText(page.getText().trim());
 
             else
                 rest.text.setVisibility(View.GONE);

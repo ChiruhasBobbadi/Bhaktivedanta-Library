@@ -48,7 +48,7 @@ class L3Adapter extends RecyclerView.Adapter<L3Adapter.ViewHolder> {
         v.vibrate(20);
 
         Level3_Pages page = l3Pages.get(position);
-        holder.text.setText(page.getVerse() + ". " + page.getVerseName());
+
         holder.setData(page);
     }
 
@@ -88,14 +88,14 @@ class L3Adapter extends RecyclerView.Adapter<L3Adapter.ViewHolder> {
 
         L3PurportAdapter adapter;
         RecyclerView rv;
-        TextView text;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             rv = itemView.findViewById(R.id.rv);
             rv.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             adapter = new L3PurportAdapter();
-            text = itemView.findViewById(R.id.text);
+
         }
 
         public void setData(Level3_Pages page) {

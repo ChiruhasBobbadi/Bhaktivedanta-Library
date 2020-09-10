@@ -2,6 +2,7 @@ package com.bhaktivedanta_library.books.ui.Level1.chapters;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.navigation.Navigation;
 import com.bhaktivedanta_library.books.Model.LastLevelModel;
 import com.bhaktivedanta_library.books.R;
 import com.bhaktivedanta_library.books.helper.Chapteradapter;
+import com.bhaktivedanta_library.books.helper.ToolBarNameHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ public class L1ChaptersFragment extends Fragment {
     SharedPreferences sharedpreferences;
     String bookName;
     L1ChaptersViewModel viewModel;
-
+    ToolBarNameHelper nameHelper;
     ListView listView;
     View v;
     List<LastLevelModel> model;
@@ -46,6 +48,8 @@ public class L1ChaptersFragment extends Fragment {
 
         listView = root.findViewById(R.id.list);
 
+
+
         init();
 
         viewModelCalls();
@@ -61,9 +65,12 @@ public class L1ChaptersFragment extends Fragment {
             v = view;
             viewModel.getPageNumberOfChapter(bookName, chap).observe(getViewLifecycleOwner(), number -> {
 
+
+
                 Bundle bundle = new Bundle();
                 bundle.putString("pageNumber", number + "-" + "level1");
-                bundle.putString("title", bookName);
+                bundle.putString("title", nameHelper.getL1TitleName(bookName,number));
+                bundle.putInt("number",number);
 
                 NavController controller = Navigation.findNavController(view);
 
@@ -81,17 +88,25 @@ public class L1ChaptersFragment extends Fragment {
         viewModel.getChapters(bookName).observe(getViewLifecycleOwner(), strings -> {
 
             model = new ArrayList<>();
-            for (int i = 0; i < strings.size(); i++)
-                model.add(new LastLevelModel((i + 1) + ". " + strings.get(i).getChapterName(), strings.get(i).getTranslation().replace("¶", "")));
 
 
+
+            for (int i = 0; i < strings.size(); i++){
+                String trans = strings.get(i).getTranslation();
+                if(trans!=null)
+                    trans = trans.replace("¶", "");
+                model.add(new LastLevelModel((i + 1) + ". " + strings.get(i).getChapterName(),trans ));
+            }
+
+            Log.d(TAG, "viewModelCalls: "+strings.size());
             createListView();
 
         });
     }
 
-    private void init() {
 
+    private void init() {
+        nameHelper = new ToolBarNameHelper();
         sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
                 MODE_PRIVATE);
         bookName = sharedpreferences.getString("bookName", "");

@@ -61,17 +61,16 @@ public class BooksFragment extends Fragment implements GridAdapter.ItemListener 
         sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
                 MODE_PRIVATE);
         editor = sharedpreferences.edit();
+
         editor.putString("bookName", clicked.getBookName());
         editor.apply();
-        Bundle bundle = new Bundle();
-        bundle.putString("title", clicked.getBookName());
 
         if(clicked.getLevel()==1)
-            controller.navigate(R.id.action_navigation_books_to_l1Fragment,bundle);
+            controller.navigate(R.id.action_navigation_books_to_l1ChaptersFragment);
         else if (clicked.getLevel()==2)
-            controller.navigate(R.id.action_navigation_books_to_l2Fragment,bundle);
+            controller.navigate(R.id.action_navigation_books_to_l2Chapters);
         else
-            controller.navigate(R.id.action_navigation_books_to_l3Fragment,bundle);
+            controller.navigate(R.id.action_navigation_books_to_l3Canto);
 
     }
 

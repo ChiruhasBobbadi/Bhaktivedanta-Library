@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -33,10 +34,12 @@ import com.bhaktivedanta_library.books.dao.level1.pages.Level1_Pages;
 import com.bhaktivedanta_library.books.dao.tags.Tags;
 import com.bhaktivedanta_library.books.dao.tags.TagsViewModel;
 import com.bhaktivedanta_library.books.helper.TagDialog;
+import com.bhaktivedanta_library.books.helper.ToolBarNameHelper;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
+import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -51,9 +54,6 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener, TagD
     BookmarksViewModel bookmarks;
     TagsViewModel tagsViewModel;
     View view;
-
-
-
     TagDialog dialog;
     int current_page;
     private L1ViewModel viewModel;
@@ -63,23 +63,22 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener, TagD
     private Menu menu;
     private ChipGroup chipGroup;
 
+    int sample;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View root = inflater.inflate(R.layout.fragment_l1, container, false);
-
-
         view = root;
         chipGroup = root.findViewById(R.id.container);
+        sample=-1;
+        Log.d(TAG, "onCreateView: ");
+
         checkIfFromChapter();
         getBookName();
-
         initRecyclerView();
-
         viewModelCall();
-
-
         return root;
     }
 
@@ -176,13 +175,19 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener, TagD
 
         viewModel.updateCurrentPage(bookName, currentPage);
         current_page = currentPage;
+        if(sample!=-1)
+            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(new ToolBarNameHelper().getL1TitleName(bookName,current_page));
+        else
+            sample=1;
+
+
+
     }
 
     @Override
     public void itemChanged(Level1_Pages page) {
         currPage = page;
-        Log.d(TAG, "itemChanged: ");
-
+        Log.d(TAG, "itemChanged: "+page.getPageNumber());
         bookmarks.isBookmark(currPage.getBookName(), "", currPage.getChapterName(), "").observe(getViewLifecycleOwner(), bookmarked -> {
             Log.d(TAG, "isBookmark " + bookmarked);
             if (bookmarked) {
@@ -193,11 +198,8 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener, TagD
                 isBookmark = false;
             }
         });
-
-
         chipGroup.removeAllViews();
         chipGroup.setVisibility(View.GONE);
-
         tagsViewModel.getTagsOfPage(bookName, currPage.getChapterName(), currPage.getPageNumber()).observe(getViewLifecycleOwner(), list -> {
             chipGroup.removeAllViews();
             if (list.size() > 0)
@@ -243,8 +245,6 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener, TagD
                     // add to db
                     bookmarks.addBookmark(bkmk);
                     Toast.makeText(getActivity(), "Bookmark added..", Toast.LENGTH_SHORT).show();
-
-
                 }
                 isBookmark = !isBookmark;
                 return true;

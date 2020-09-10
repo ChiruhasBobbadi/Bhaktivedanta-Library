@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -33,10 +34,12 @@ import com.bhaktivedanta_library.books.dao.level3.pages.Level3_Pages;
 import com.bhaktivedanta_library.books.dao.tags.Tags;
 import com.bhaktivedanta_library.books.dao.tags.TagsViewModel;
 import com.bhaktivedanta_library.books.helper.TagDialog;
+import com.bhaktivedanta_library.books.helper.ToolBarNameHelper;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
+import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -62,6 +65,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener, TagD
     private int current_page;
     private ChipGroup chipGroup;
     private TagDialog dialog;
+    private int sample;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +74,7 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener, TagD
         View root = inflater.inflate(R.layout.fragment_l3, container, false);
         view = root;
         chipGroup = root.findViewById(R.id.container);
+        sample=-1;
         checkIfFromVerse();
         getBookName();
 
@@ -173,6 +178,11 @@ public class L3Fragment extends Fragment implements L3Adapter.ItemListener, TagD
     public void itemChanged(Level3_Pages page) {
         currPage = page;
         Log.d(TAG, "itemChanged: ");
+
+        if(sample!=-1)
+            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(new ToolBarNameHelper().getL3TitleName(currPage.getVerseName()));
+        else
+            sample=1;
 
         bookmarksViewModel.isBookmark(currPage.getBookName(), currPage.getLevel_3_Name(), currPage.getChapterName(), currPage.getVerseName()).observe(getViewLifecycleOwner(), bookmarked -> {
             Log.d(TAG, "isBookmark "+bookmarked);

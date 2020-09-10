@@ -3,11 +3,13 @@ package com.bhaktivedanta_library.books.ui.Level3.canto;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,11 +45,21 @@ public class L3Canto extends Fragment {
         listView = root.findViewById(R.id.list);
 
         init();
-
+        changeName();
         viewModelCalls();
         listItemClick();
 
         return root;
+    }
+
+    private void changeName() {
+        if(bookName.equals("Śrī Caitanya-caritāmṛta"))
+            ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Section");
+
+
+        Log.d(TAG, "changeName: "+bookName);
+
+
     }
 
     private void listItemClick() {
