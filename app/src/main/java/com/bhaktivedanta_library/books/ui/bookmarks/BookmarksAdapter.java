@@ -36,7 +36,6 @@ class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.ViewHolder>
 
         Bookmarks bookmark = bookmarks.get(position);
         holder.bookName.setText(bookmark.getDisplayName());
-
         holder.card.setOnClickListener(view -> itemListener.itemClicked(bookmark, view));
 
 
@@ -68,6 +67,7 @@ class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.ViewHolder>
             super(itemView);
             bookName = itemView.findViewById(R.id.bookName);
             card = itemView.findViewById(R.id.layout);
+//            lastLayer = itemView.findViewById(R.id.lastLayer);
         }
     }
 }

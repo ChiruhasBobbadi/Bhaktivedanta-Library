@@ -36,6 +36,8 @@ public class BooksFragment extends Fragment implements GridAdapter.ItemListener 
 
         rv = root.findViewById(R.id.rv);
 
+
+        nullifyPrevSearch();
         adapter= new GridAdapter(this::onItemClick);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2,GridLayoutManager.VERTICAL,false);
 
@@ -43,14 +45,17 @@ public class BooksFragment extends Fragment implements GridAdapter.ItemListener 
         rv.setAdapter(adapter);
         booksViewModel =
                 ViewModelProviders.of(getActivity()).get(BooksViewModel.class);
-
-
         booksViewModel.getAll().observe(getViewLifecycleOwner(), lookupTables -> adapter.setData(lookupTables));
-
-
-
-
         return root;
+    }
+
+    private void nullifyPrevSearch() {
+        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
+                MODE_PRIVATE);
+        editor = sharedpreferences.edit();
+        editor.putString("searchKey","");
+        editor.putString("tagKey","");
+        editor.apply();
     }
 
     @Override
@@ -58,11 +63,9 @@ public class BooksFragment extends Fragment implements GridAdapter.ItemListener 
 
         NavController controller = Navigation.findNavController(v);
 
-        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
-                MODE_PRIVATE);
-        editor = sharedpreferences.edit();
 
         editor.putString("bookName", clicked.getBookName());
+
         editor.apply();
 
         if(clicked.getLevel()==1)

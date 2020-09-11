@@ -1,5 +1,6 @@
 package com.bhaktivedanta_library.books.ui.search;
 
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
         SearchModel model = models.get(position);
         holder.bookName.setText(model.getDisplayName());
         holder.card.setOnClickListener(view -> itemListener.itemClicked(model, view));
-
+       // holder.lastLayer.setText(model.getLastLevelName());
 
     }
 
@@ -67,6 +68,7 @@ class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
             super(itemView);
             bookName = itemView.findViewById(R.id.bookName);
             card = itemView.findViewById(R.id.layout);
+            //lastLayer = itemView.findViewById(R.id.lastLayer);
         }
     }
 }

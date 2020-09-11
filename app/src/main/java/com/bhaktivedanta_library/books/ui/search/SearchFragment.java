@@ -54,6 +54,8 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
     private Menu menu;
     private RecyclerView rv;
     private String searchKey;
+    SearchView searchView;
+    private String prevSearch,prevTag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,24 +63,35 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_search, container, false);
+        rv = root.findViewById(R.id.rv);
+        init();
+        return root;
+    }
+
+    private void init() {
+
         viewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
         tagsViewModel = ViewModelProviders.of(this).get(TagsViewModel.class);
         quickAccessViewModel = ViewModelProviders.of(this).get(QuickAccessViewModel.class);
+        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
+                MODE_PRIVATE);
+        editor = sharedpreferences.edit();
 
+
+        prevSearch = sharedpreferences.getString("searchKey", "");
+        prevTag = sharedpreferences.getString("tagKey", "");
         helper = new ToolBarNameHelper();
-        rv = root.findViewById(R.id.rv);
         adapter = new SearchAdapter(this);
         DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
         itemDecor.setDrawable(getActivity().getResources().getDrawable(R.drawable.divider));
         rv.addItemDecoration(itemDecor);
-
         rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rv.setAdapter(adapter);
-
         searchResults = new ArrayList<>();
 
-        return root;
     }
+
+
 
 
     @Override
@@ -86,16 +99,27 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.search, menu);
         MenuItem item = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) item.getActionView();
+        searchView= (SearchView) item.getActionView();
         searchView.setIconified(false);
         searchView.setQueryHint("Search #food, lord");
         searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        if(!prevSearch.equals("")){
+            searchView.setQuery(prevSearch,false);
+            searchWord(prevSearch);
+            Log.d(TAG, "checkPrevSearch: true");
+        }else if(!prevTag.equals("")){
+            searchView.setQuery(prevTag,false);
+            fetchTags(prevTag);
+        }
+
         int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
         View searchPlate = searchView.findViewById(searchPlateId);
         if (searchPlate != null) {
             searchPlate.setBackgroundColor(Color.TRANSPARENT);
             int searchTextId = searchPlate.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         }
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -109,7 +133,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
                     searchResults.clear();
                     adapter.setData(searchResults);
                 } else {
-                    searchDb(s.trim());
+                    searchWord(s.trim());
                 }
                 return false;
             }
@@ -131,7 +155,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
 
     }
 
-    private void searchDb(String string) {
+    private void searchWord(String string) {
         fetchL1Results(string);
     }
 
@@ -178,6 +202,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
 
 
     private void fetchTags(String tagName) {
+        searchKey = tagName;
         tagsViewModel.getTagsByName(tagName).observe(getViewLifecycleOwner(), tags -> {
             this.tags = tags;
 
@@ -210,11 +235,10 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
     public void itemClicked(SearchModel bookmark, View v) {
 
         NavController controller = Navigation.findNavController(v);
-        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
-                MODE_PRIVATE);
-        editor = sharedpreferences.edit();
-        editor.putString("bookName", bookmark.getBookName());
 
+        editor.putString("bookName", bookmark.getBookName());
+        editor.putString("searchKey",searchKey.startsWith("#")?"":searchKey);
+        editor.putString("tagKey",searchKey.startsWith("#")?searchKey:"");
         Log.d(TAG, "itemClicked: " + searchKey);
         editor.apply();
         Bundle bundle = new Bundle();

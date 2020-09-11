@@ -16,6 +16,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bhaktivedanta_library.books.R;
+import com.bhaktivedanta_library.books.helper.ToolBarNameHelper;
 import com.bhaktivedanta_library.books.ui.books.GridAdapter;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
@@ -33,10 +34,12 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
     List<String> chapters;
     List<String> verses;
     List<String> cantos;
+    int currentPage;
     View view,navView;
     Button submit;
     TextView chapterName, cantoName, verseName;
     int level = -1;
+    int l2Chapter;
     String bookName;
     String _chapter, _canto, _verse;
     NavController controller;
@@ -44,26 +47,35 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
     SharedPreferences sharedpreferences;
     GridAdapter adapter;
     SharedPreferences.Editor editor;
+
+    TextView cantoTextView,verseTextView,chapterTextView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_quick_access, container, false);
-
+        cantoTextView = view.findViewById(R.id.cantoName);
+        verseTextView = view.findViewById(R.id.verseName);
+        chapterTextView = view.findViewById(R.id.chapterName);
         init();
-
-
+        nullifyPrevSearch();
         viewModel = ViewModelProviders.of(this).get(QuickAccessViewModel.class);
-
         viewModel.getBooks().observe(getViewLifecycleOwner(), list -> {
 
             list.add(0, "Select Book Name");
             books = list;
             name.setItems(books);
         });
-
-
         return view;
+    }
+
+    private void nullifyPrevSearch() {
+        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
+                MODE_PRIVATE);
+        editor = sharedpreferences.edit();
+        editor.putString("searchKey","");
+        editor.putString("tagKey","");
+        editor.apply();
     }
 
     private void init() {
@@ -99,6 +111,18 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
                     Toast.makeText(getActivity(), "Please select a book to proceed", Toast.LENGTH_SHORT).show();
                 else {
                     bookName = books.get(position);
+
+                    if(bookName.equals("Life Comes from Life")){
+                        chapterTextView.setText("Morning Walk");
+                        verseTextView.setText("Chapter");
+                    }
+                    else if(bookName.equals("Śrī Caitanya-caritāmṛta")){
+                        cantoTextView.setText("Section");
+                    }
+                    else if(bookName.equals("The Science of Self Realization")){
+                        chapterTextView.setText("Section");
+                        verseTextView.setText("Chapter");
+                    }
 
                     viewModel.getLevel(bookName).observe(getViewLifecycleOwner(), level -> {
                         this.level = level;
@@ -155,8 +179,10 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
                     if (level == 1) {
                         submit.setVisibility(View.VISIBLE);
                     } else if (level > 1) {
-                        if (level == 2)
+                        if (level == 2) {
                             setL2Verse();
+                            l2Chapter = position;
+                        }
                         else
                             setL3Verse();
 
@@ -170,7 +196,7 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
                     Toast.makeText(getActivity(), "Please select  a chapter", Toast.LENGTH_SHORT).show();
                 else {
                     _verse = verses.get(position).trim();
-
+                    Log.d(TAG, "onItemSelected: "+_verse);
                 }
                 submit.setVisibility(View.VISIBLE);
                 break;
@@ -232,28 +258,26 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
             ver.add(0, "Select Verse");
             verses = ver;
             for (int i = 1; i < ver.size(); i++) {
-                temp.add((i) + ". " + ver.get(i));
+                temp.add(ver.get(i));
             }
             verse.setItems(temp);
         });
     }
 
-
     private void setL3Verse() {
-        viewModel.l3Repo.getVerses(bookName, _canto, _chapter).observe(getViewLifecycleOwner(), ver -> {
+
             viewModel.l3Repo.getVerses(bookName,_canto,_chapter).observe(getViewLifecycleOwner(), can -> {
                 List<String> temp = new ArrayList<>();
                 temp.add("Select Verse");
                 can.add(0, "Select Verse");
                 verses = can;
                 for (int i = 1; i < can.size(); i++) {
-                    temp.add((i) + ". " + can.get(i));
+                    temp.add(can.get(i));
                 }
                 verse.setItems(temp);
             });
 
 
-        });
     }
 
     private void setL3Canto() {
@@ -274,6 +298,7 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
     public void getL1PageNumber() {
         viewModel.l1Repo.getPageNumberOfChapter(bookName,_chapter).observe(getViewLifecycleOwner(), integer -> {
             viewModel.l1Repo.updateCurrentPage(bookName,integer);
+            currentPage = integer;
             controller.navigate(R.id.action_quick_access_to_l1Fragment,bundle);
         });
     }
@@ -281,13 +306,17 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
     public void getL2PageNumber() {
         viewModel.l2Repo.getPageNumberOfVerse(bookName,_chapter,_verse).observe(getViewLifecycleOwner(), integer -> {
             viewModel.l2Repo.updateCurrentPage(bookName,integer);
+            currentPage = integer;
             controller.navigate(R.id.action_quick_access_to_l2Fragment,bundle);
         });
     }
 
     public void getL3PageNumber() {
-        viewModel.l3Repo.getPageNumberOfVerse(bookName,_canto,_chapter,_verse).observe(getViewLifecycleOwner(), integer -> {
+        viewModel.l3Repo.getPageNumberOfVerse(bookName,_canto,_chapter,_verse).observe(getViewLifecycleOwner(),
+                integer -> {
+            Log.d(TAG, "getL3PageNumber: "+integer);
             viewModel.l3Repo.updateCurrentPage(bookName,integer);
+            currentPage = integer;
             controller.navigate(R.id.action_quick_access_to_l3Fragment,bundle);
         });
     }
@@ -300,7 +329,19 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
         controller = Navigation.findNavController(navView);
         // navigate to appropriate page
         bundle = new Bundle();
-        bundle.putString("title", bookName);
+        if(level==1)
+        bundle.putString("title", new ToolBarNameHelper().getL1TitleName(bookName,currentPage));
+        else if(level==2)
+            bundle.putString("title",new ToolBarNameHelper().getL2TitleName(bookName,l2Chapter,_verse));
+        else if(level==3)
+            bundle.putString("title",new ToolBarNameHelper().getL3TitleName(_verse));
+
+
+        Log.d(TAG, "onClick: "+level);
+        Log.d(TAG, "onClick: "+_canto);
+        Log.d(TAG, "onClick: "+_chapter);
+        Log.d(TAG, "onClick: "+_verse);
+
 
         if (level == 1 && _chapter != null)
             getL1PageNumber();
@@ -313,9 +354,6 @@ public class QuickAccessFragment extends Fragment implements MaterialSpinner.OnI
 
     }
     void setBookName(){
-        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
-                MODE_PRIVATE);
-        editor = sharedpreferences.edit();
         editor.putString("bookName", bookName);
         editor.apply();
     }

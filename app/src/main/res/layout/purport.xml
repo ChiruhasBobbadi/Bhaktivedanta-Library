@@ -15,7 +15,6 @@
         android:textIsSelectable="true"
         android:focusable="true"
         android:longClickable="true"
-        android:paddingTop="16dp"
         android:justificationMode="inter_word"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/text_color"

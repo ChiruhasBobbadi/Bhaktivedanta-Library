@@ -6,8 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,12 +25,13 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
     boolean _text, _synonyms, _translation, _purport;
     Context context;
     String _font;
+    List<String> tags;
+    List<String> list_text = new ArrayList<>();
+    FlexboxLayout container;
     private L1Adapter.ItemListener myListener;
     private List<Level1_Pages> l1Pages;
     private String searchKey;
-    List<String> tags;
-    List<String> list_text=new ArrayList<>();
-    FlexboxLayout container;
+
     public L1Adapter(L1Adapter.ItemListener listener, Context con) {
         myListener = listener;
         context = con;
@@ -48,7 +47,7 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
     @Override
     public L1Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        ViewHolder holder =  new ViewHolder(LayoutInflater.from(parent.getContext())
+        ViewHolder holder = new ViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyler_view_base, parent, false));
 
         return holder;
@@ -74,21 +73,21 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
 
     }
 
-    public void setTags(List<String> tags){
+    public void setTags(List<String> tags) {
 
         notifyDataSetChanged();
     }
 
 
-    public void setData(List<Level1_Pages> pages, boolean text, boolean purport, boolean trans, boolean syn,String font,String search) {
+    public void setData(List<Level1_Pages> pages, boolean text, boolean purport, boolean trans, boolean syn, String font, String search) {
         l1Pages = pages;
         _text = text;
         _purport = purport;
         _translation = trans;
         _synonyms = syn;
-        _font=font;
+        _font = font;
         searchKey = search;
-        Log.d(TAG, "setData: "+searchKey);
+        Log.d(TAG, "setData: " + searchKey);
         notifyDataSetChanged();
     }
 
@@ -126,6 +125,7 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
 
     public interface ItemListener {
         void onPageChange(int current_page);
+
         void itemChanged(Level1_Pages page);
     }
 
@@ -133,7 +133,6 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
 
         PurportAdapter adapter;
         RecyclerView rv;
-
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -148,7 +147,7 @@ public class L1Adapter extends RecyclerView.Adapter<L1Adapter.ViewHolder> {
         public void setData(Level1_Pages page) {
 
 
-            adapter.setData(context,page, _text, _synonyms, _purport, _translation,_font,searchKey);
+            adapter.setData(context, page, _text, _synonyms, _purport, _translation, _font, searchKey);
             rv.setAdapter(adapter);
         }
 

@@ -21,13 +21,13 @@ import java.util.List;
 
 class L3PurportAdapter extends RecyclerView.Adapter {
 
+    private static final String TAG = "L3PurportAdapter";
     Level3_Pages page;
     List<String> purport;
     String _font;
     Context context;
     boolean _text, _synonyms, _translation, _purport;
     String searchKey;
-    private static final String TAG = "L3PurportAdapter";
 
     public void setData(Context con, Level3_Pages data, boolean text, boolean syn, boolean pu, boolean trans, String fon, String search) {
         _text = text;
@@ -78,26 +78,31 @@ class L3PurportAdapter extends RecyclerView.Adapter {
                     rest.text.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.title.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
                 case "textSmall":
                     rest.text.setTextAppearance(android.R.style.TextAppearance_Small);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Small);
                     rest.translation.setTextAppearance(android.R.style.TextAppearance_Small);
+                    rest.title.setTextAppearance(android.R.style.TextAppearance_Small);
                     break;
                 case "textMedium":
                     rest.text.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.translation.setTextAppearance(android.R.style.TextAppearance_Medium);
+                    rest.title.setTextAppearance(android.R.style.TextAppearance_Medium);
                     break;
                 case "textLarge":
                     rest.text.setTextAppearance(android.R.style.TextAppearance_Large);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Large);
                     rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.title.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
                 default:
                     rest.text.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.synonyms.setTextAppearance(android.R.style.TextAppearance_Medium);
                     rest.translation.setTextAppearance(android.R.style.TextAppearance_Large);
+                    rest.title.setTextAppearance(android.R.style.TextAppearance_Large);
                     break;
             }
 
@@ -105,9 +110,11 @@ class L3PurportAdapter extends RecyclerView.Adapter {
             rest.synonyms.setTextColor(context.getResources().getColor(R.color.text_color));
             rest.translation.setTextColor(context.getResources().getColor(R.color.text_color));
             rest.translation.setTypeface(Typeface.DEFAULT_BOLD);
+            rest.title.setTextColor(context.getResources().getColor(R.color.text_color));
+            rest.title.setTypeface(Typeface.DEFAULT_BOLD);
 
             if (_text && (page.getText() != null && page.getText().length() != 0))
-                rest.text.setText(page.getText().trim());
+                rest.text.setText("\n" + page.getText().trim());
 
 
             else
@@ -115,7 +122,7 @@ class L3PurportAdapter extends RecyclerView.Adapter {
 
 
             if (_synonyms && (page.getSynonyms() != null && page.getSynonyms().length() != 0))
-                rest.synonyms.setText(page.getSynonyms().replace("¶", ""));
+                rest.synonyms.setText("\n" + page.getSynonyms().replace("¶", "").trim());
             else
                 rest.synonyms.setVisibility(View.GONE);
 
@@ -127,17 +134,19 @@ class L3PurportAdapter extends RecyclerView.Adapter {
                     searchKey = searchKey.toLowerCase().trim();
                     int startIndex = s.indexOf(searchKey);
                     if (startIndex == -1) {
-                        rest.translation.setText(page.getTranslation().replace("¶", "") + "\n");
+                        rest.translation.setText("\n" + page.getTranslation().replace("¶", "").trim());
                     } else {
-                        SpannableString str = new SpannableString(page.getTranslation() + "\n");
+                        SpannableString str = new SpannableString("\n" + page.getTranslation());
                         str.setSpan(new BackgroundColorSpan(context.getResources().getColor(R.color.highlight)), startIndex, startIndex + searchKey.length(), 0);
                         rest.translation.setText(str);
                     }
 
                 } else
-                    rest.translation.setText(page.getTranslation().replace("¶", "") + "\n");
+                    rest.translation.setText("\n" + page.getTranslation().replace("¶", "").trim());
             } else
                 rest.translation.setVisibility(View.GONE);
+
+            rest.title.setText("\n"+page.getVerseName());
 
 
         } else if (position % 2 != 0) {
@@ -208,7 +217,7 @@ class L3PurportAdapter extends RecyclerView.Adapter {
 
                 String t = purport.get(position - 1).trim();
                 Log.d(TAG, "onBindViewHolder: " + t);
-                poem.poem.setText(t);
+                poem.poem.setText("\n" + t.trim());
             } else
                 poem.poem.setVisibility(View.GONE);
         }
@@ -232,14 +241,14 @@ class L3PurportAdapter extends RecyclerView.Adapter {
     }
 
     class ViewHolderRest extends RecyclerView.ViewHolder {
-        TextView text, synonyms, translation;
+        TextView text, synonyms, translation,title;
 
         public ViewHolderRest(@NonNull View itemView) {
             super(itemView);
             text = itemView.findViewById(R.id.text);
             synonyms = itemView.findViewById(R.id.synonyms);
             translation = itemView.findViewById(R.id.translation);
-
+            title = itemView.findViewById(R.id.title);
         }
     }
 

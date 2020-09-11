@@ -37,16 +37,22 @@ public class BookmarksFragment extends Fragment implements BookmarksAdapter.Item
     private static final String TAG = "BookmarksFragment";
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-       viewModelCall();
+
        view  = inflater.inflate(R.layout.fragment_bookmarks, container, false);
        rv = view.findViewById(R.id.rv);
+        init();
+        nullifyPrevSearch();
+        viewModelCall();
+        return view;
+    }
+
+    private void init() {
         DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
         itemDecor.setDrawable(getActivity().getResources().getDrawable( R.drawable.divider ));
         rv.addItemDecoration(itemDecor);
         adapter = new BookmarksAdapter(this);
         rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rv.setAdapter(adapter);
-        return view;
     }
 
     private void viewModelCall() {
@@ -63,13 +69,18 @@ public class BookmarksFragment extends Fragment implements BookmarksAdapter.Item
 
 
     }
-
-    @Override
-    public void itemClicked(Bookmarks bookmark,View v) {
-        NavController controller = Navigation.findNavController(v);
+    private void nullifyPrevSearch() {
         sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
                 MODE_PRIVATE);
         editor = sharedpreferences.edit();
+        editor.putString("searchKey","");
+        editor.putString("tagKey","");
+        editor.apply();
+    }
+    @Override
+    public void itemClicked(Bookmarks bookmark,View v) {
+        NavController controller = Navigation.findNavController(v);
+
         editor.putString("bookName", bookmark.getBookName());
         editor.apply();
         Bundle bundle = new Bundle();

@@ -29,16 +29,27 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
     SharedPreferences sharedpreferences;
     boolean _text, _purport, _synonyms, _translation, _isDarkMode, _keepAwake, _textDefault, _textSmall, _textMedium, _textLarge;
     SharedPreferences.Editor editor;
-    private SettingsViewModel settingsViewModel;
+
     private SwitchCompat text, purport, synonyms, translation, darkMode, keepAwake;
     private MaterialSpinner fontSize;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        settingsViewModel =
-                ViewModelProviders.of(this).get(SettingsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        View root = inflater.inflate(R.layout.fragment_settings, container, false);
+        nullifyPrevSearch();
+       init(root);
+       return root;
+    }
+    private void nullifyPrevSearch() {
+        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
+                MODE_PRIVATE);
+        editor = sharedpreferences.edit();
+        editor.putString("searchKey","");
+        editor.putString("tagKey","");
+        editor.apply();
+    }
+    private void init(View root) {
         fontSize = root.findViewById(R.id.fontSize);
         text = root.findViewById(R.id.text);
         purport = root.findViewById(R.id.purport);
@@ -61,13 +72,10 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
         darkMode.setChecked(_isDarkMode);
         keepAwake.setChecked(_keepAwake);
 
-
-        return root;
     }
 
     private void checkPrefs() {
-        sharedpreferences = this.getActivity().getSharedPreferences("dataStore",
-                MODE_PRIVATE);
+
         _text = sharedpreferences.getBoolean("text", true);
         _synonyms = sharedpreferences.getBoolean("synonyms", true);
         _translation = sharedpreferences.getBoolean("translation", true);
@@ -78,19 +86,13 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
         _textSmall = sharedpreferences.getBoolean("textSmall", false);
         _textMedium = sharedpreferences.getBoolean("textMedium", false);
         _textLarge = sharedpreferences.getBoolean("textLarge", false);
-
-
-
         fontSize.setOnItemSelectedListener(this);
         fontSize.setItems("Default", "Small", "Medium", "Large");
         fontSize.setSelectedIndex(3);
-
         if (_textDefault)
             fontSize.setSelectedIndex(0);
-
         else if (_textSmall)
             fontSize.setSelectedIndex(1);
-
         else if (_textMedium)
             fontSize.setSelectedIndex(2);
         else if (_textLarge)
@@ -98,10 +100,9 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
     }
 
 
+
     @Override
     public void onCheckedChanged(CompoundButton v, boolean isChecked) {
-        editor = sharedpreferences.edit();
-
         Map<Integer, String> map = new HashMap<>();
         map.put(R.id.text, "text");
         map.put(R.id.purport, "purport");
