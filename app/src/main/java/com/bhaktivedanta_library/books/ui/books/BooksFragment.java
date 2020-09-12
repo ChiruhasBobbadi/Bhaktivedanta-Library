@@ -2,6 +2,7 @@ package com.bhaktivedanta_library.books.ui.books;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,12 +41,16 @@ public class BooksFragment extends Fragment implements GridAdapter.ItemListener 
         nullifyPrevSearch();
         adapter= new GridAdapter(this::onItemClick);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2,GridLayoutManager.VERTICAL,false);
-
         rv.setLayoutManager(gridLayoutManager);
         rv.setAdapter(adapter);
+
+
         booksViewModel =
                 ViewModelProviders.of(getActivity()).get(BooksViewModel.class);
-        booksViewModel.getAll().observe(getViewLifecycleOwner(), lookupTables -> adapter.setData(lookupTables));
+        booksViewModel.getAll().observe(getViewLifecycleOwner(), lookupTables ->{
+            adapter.setData(lookupTables);
+
+        });
         return root;
     }
 
@@ -67,6 +72,8 @@ public class BooksFragment extends Fragment implements GridAdapter.ItemListener 
         editor.putString("bookName", clicked.getBookName());
 
         editor.apply();
+
+        Log.d(TAG, "onItemClick: "+clicked.getBookName());
 
         if(clicked.getLevel()==1)
             controller.navigate(R.id.action_navigation_books_to_l1ChaptersFragment);

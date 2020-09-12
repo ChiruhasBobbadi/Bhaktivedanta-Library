@@ -27,6 +27,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     List<LookupTable> lookupTables ;
      Map<String,Integer> map;
 
+
     public GridAdapter(ItemListener listener) {
 
         myListener = listener;

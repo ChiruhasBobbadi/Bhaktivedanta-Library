@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -74,6 +75,9 @@ public class L1Fragment extends Fragment implements L1Adapter.ItemListener, TagD
         chipGroup = root.findViewById(R.id.container);
         sample=-1;
         Log.d(TAG, "onCreateView: ");
+
+
+
 
         checkIfFromChapter();
         getBookName();

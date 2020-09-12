@@ -12,7 +12,7 @@ import com.bhaktivedanta_library.books.dao.tags.TagsDao;
 
 @androidx.room.Database(entities = {
         Bookmarks.class, Tags.class
-}, version = 1)
+}, version = 2)
 public abstract class PersistentDB extends RoomDatabase {
     private static PersistentDB instance;
 

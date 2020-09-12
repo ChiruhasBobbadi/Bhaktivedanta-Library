@@ -1,10 +1,12 @@
 package com.bhaktivedanta_library.books.ui.bookmarks;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -53,6 +55,13 @@ public class BookmarksFragment extends Fragment implements BookmarksAdapter.Item
         adapter = new BookmarksAdapter(this);
         rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rv.setAdapter(adapter);
+        if(getActivity().getCurrentFocus()!=null){
+            View view = getActivity().getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
     }
 
     private void viewModelCall() {

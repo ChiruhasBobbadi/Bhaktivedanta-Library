@@ -1,5 +1,6 @@
 package com.bhaktivedanta_library.books.ui.search;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -105,11 +107,11 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         searchView.setMaxWidth(Integer.MAX_VALUE);
 
         if(!prevSearch.equals("")){
-            searchView.setQuery(prevSearch,false);
+            searchView.setQuery(prevSearch,true);
             searchWord(prevSearch);
             Log.d(TAG, "checkPrevSearch: true");
         }else if(!prevTag.equals("")){
-            searchView.setQuery(prevTag,false);
+            searchView.setQuery(prevTag,true);
             fetchTags(prevTag);
         }
 
@@ -234,6 +236,13 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
     @Override
     public void itemClicked(SearchModel bookmark, View v) {
 
+        if(getActivity().getCurrentFocus()!=null){
+            View view = getActivity().getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
         NavController controller = Navigation.findNavController(v);
 
         editor.putString("bookName", bookmark.getBookName());
@@ -261,4 +270,6 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemListen
         }
 
     }
+
+
 }
