@@ -1,7 +1,9 @@
 
 **Bhaktivedanta Library**
 
-*insert content about app later*
+*This is an E-reader application, which comes preloaded with 24 religious books and offers every functionality, expected of an E-reader application*
+
+*This application offers features like, bookmarking, tagging, searching, highlighting, adjusting the font size, and finally Dark mode*
 
 *App Look*
 
